@@ -45,7 +45,7 @@ Include the minified script in your HTML file before your custom scripts.
 npm is a front-end package manager that simplifies adding new packages.
 
 ```
-npm install sr-js
+npm i sr-js
 ```
 
 ## Some examples
