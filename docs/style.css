@@ -76,7 +76,7 @@ a:hover {
 }
 
 pre {
-    background-color: #f0f9ff;
+    background-color: #f6f8fa;
     color: #0c4a6e;
     border: 1px solid #bae6fd;
     border-left: 4px solid #0284c7;
@@ -156,7 +156,7 @@ p code {
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.params-table th, 
+.params-table th,
 .params-table td {
     border: 1px solid #e5e7eb;
     padding: 12px;
