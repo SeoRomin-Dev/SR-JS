@@ -70,6 +70,14 @@ $.ajax({
 });
 ```
 
+### Delegated binding with namespaces
+
+```javascript
+$('#container').on('click.myPlugin', '.btn', function() {
+     console.log('Button inside container clicked');
+});
+```
+
 ### Toggle class
 
 ```javascript
@@ -86,8 +94,7 @@ const $card = $.t('<div>', {
      data: { id: 101 }
 });
 ```
-
-Refer to the [docs folder](https://github.com/SeoRomin-Dev/SR-JS/blob/main/docs) for more details.
+... Refer to the [docs folder](https://github.com/SeoRomin-Dev/SR-JS/blob/main/docs) for more details.
 
 ## Extending SR JS
 
