@@ -30,7 +30,7 @@ Include the minified script in your HTML file before your custom scripts.
 </html>
 ```
 
-### Must be in your project:
+### Add to your project:
 
 ```html
 <script src="sr.min.js"></script>
