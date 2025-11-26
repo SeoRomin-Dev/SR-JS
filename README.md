@@ -40,6 +40,14 @@ Include the minified script in your HTML file before your custom scripts.
 
 [Download SR JS](https://raw.githubusercontent.com/SeoRomin-Dev/SR-JS/refs/heads/main/dist/sr.min.js)
 
+### Or install with `npm`:
+
+npm is a front-end package manager that simplifies adding new packages.
+
+```
+npm install sr-js
+```
+
 ## Some examples
 
 ### Basic GET Request
