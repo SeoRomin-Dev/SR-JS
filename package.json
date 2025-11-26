@@ -1,0 +1,25 @@
+{
+	"name": "SeoRomin JS Library",
+	"title": "SR JS",
+	"description": "Pure JavaScript (JS) library for DOM manipulation and events",
+	"version": "1.0.0",
+	"author": "Roman Orlovskiy",
+	"license": "MIT",
+	"keywords": [
+		"sr",
+		"seoromin",
+		"pure",
+		"js",
+		"small",
+		"javascript",
+		"library"
+	],
+	"main": "dist/sr.min.js",
+	"scripts": {
+		"build": "node build.js"
+	},
+	"type": "commonjs",
+	"devDependencies": {
+		"terser": "^5.0.0"
+	}
+}
