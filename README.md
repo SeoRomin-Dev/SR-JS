@@ -1,4 +1,4 @@
-# SeoRomin JS Library
+# SeoRomin JS Library (SR JS)
 
 A pure JavaScript library for DOM manipulation, events, and animations. It provides a familiar chaining syntax while utilizing modern browser APIs for maximum performance.
 
