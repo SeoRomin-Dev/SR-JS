@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.replaceWith() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.replaceWith()</h1>
+          <p>Replace each element in the set of matched elements with the provided new content.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Replace with HTML</h3>
+          <pre class="example"><code>// &lt;h3&gt;Old Header&lt;/h3&gt;
+$('h3').replaceWith('&lt;h2&gt;New Header&lt;/h2&gt;');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;h2&gt;New Header&lt;/h2&gt;</code></pre>
+
+          <h3>2. Replace with Element</h3>
+          <pre class="example"><code>const $div = $.t('&lt;div&gt;', { class: 'new' });
+$('.old').replaceWith($div);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="new"&gt;&lt;/div&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>newContent</strong></td>
+                         <td>string | element | SR</td>
+                         <td>HTML string, DOM element, or SR object to replace each matched element.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object (containing the removed elements) for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.join() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.join()</h1>
+          <p>Creates a string by concatenating the text content of each element, separated by a separator.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Join with separator</h3>
+          <pre class="example"><code>// &lt;li&gt;Apple&lt;/li&gt;&lt;li&gt;Banana&lt;/li&gt;
+const str = $('li').join(', ');</code></pre>
+          <h4>Result</h4>
+          <pre><code>"Apple, Banana"</code></pre>
+
+          <h3>2. Default separator</h3>
+          <pre class="example"><code>const str2 = $('li').join();</code></pre>
+          <h4>Result</h4>
+          <pre><code>"Apple,Banana"</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>separator</strong></td>
+                         <td>string</td>
+                         <td>Optional. Specifies a string to separate each element's text. Default is ",".</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> String.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

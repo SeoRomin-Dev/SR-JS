@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.hide() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.hide()</h1>
+          <p>Hide the matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Hide Element</h3>
+          <pre class="example"><code>$('.modal').hide();</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="modal" style="display: none;"&gt;...&lt;/div&gt;</code></pre>
+
+          <h2>Details</h2>
+          <p>Sets `display: none`. It internally caches the previous display value so <code>.show()</code> can later restore the element to its original display type (block, flex, inline, etc.), rather than forcing `block`.</p>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

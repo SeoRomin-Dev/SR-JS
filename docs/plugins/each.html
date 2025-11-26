@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.each() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.each()</h1>
+          <p>Iterate over an SR object, executing a function for each matched element.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Basic Iteration</h3>
+          <pre class="example"><code>// &lt;li&gt;A&lt;/li&gt;&lt;li&gt;B&lt;/li&gt;
+$('li').each((index, el) => {
+     console.log(`${index}: ${el.textContent}`);
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Console Output:
+0: A
+1: B</code></pre>
+
+          <h3>2. Breaking the loop</h3>
+          <pre class="example"><code>$('li').each(function(index) {
+     if (index === 2) return false;
+     $(this).addClass('processed');
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;li class="processed"&gt;Item 0&lt;/li&gt;
+&lt;li class="processed"&gt;Item 1&lt;/li&gt;
+&lt;li&gt;Item 2&lt;/li&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>callback</strong></td>
+                         <td>function</td>
+                         <td>A function to execute for each matched element. The callback receives <code>(index, element)</code> arguments. Inside the callback, <code>this</code> refers to the raw DOM element. Return <code>false</code> to stop iteration early.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

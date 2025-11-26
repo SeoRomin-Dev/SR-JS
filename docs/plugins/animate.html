@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.animate() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.animate()</h1>
+          <p>Perform a custom animation of a set of CSS properties. Also includes shorthand methods for fading and sliding.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Basic Animation</h3>
+          <pre class="example"><code>$('#box').animate({
+     opacity: 0.5,
+     marginLeft: '50px',
+     width: 200
+}, {
+     duration: 600,
+     easing: 'ease-out',
+     after: () => console.log('Done')
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;!-- After 600ms --&gt;
+&lt;div id="box" style="opacity: 0.5; margin-left: 50px; width: 200px;"&gt;&lt;/div&gt;</code></pre>
+
+          <h3>2. Animation with Callback</h3>
+          <pre class="example"><code>$('.panel').animate({ height: '0px' }, {
+     duration: 400,
+     easing: 'linear',
+     after: function() {
+          $(this).hide();
+     }
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;!-- Step 1: Animates height to 0 --&gt;
+&lt;!-- Step 2: Callback runs, setting display: none --&gt;
+&lt;div class="panel" style="height: 0px; display: none;"&gt;&lt;/div&gt;</code></pre>
+
+          <h3>3. Presets (Fade/Slide)</h3>
+          <pre class="example"><code>$('#msg').fadeIn(400);
+$('#menu').slideUp(200);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div id="msg" style="display: block; opacity: 1;"&gt;...&lt;/div&gt;
+&lt;div id="menu" style="display: none; height: 0px;"&gt;...&lt;/div&gt;</code></pre>
+
+          <h2>Parameters (.animate)</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>properties</strong></td>
+                         <td>object</td>
+                         <td>An object of CSS properties and values that the animation will move toward. Numeric values are treated as pixels unless specified otherwise.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>settings</strong></td>
+                         <td>object</td>
+                         <td>Optional. An object of settings to configure the animation.
+                              <ul>
+                                   <li><code>duration</code> (number | string): Duration in milliseconds or a preset ('fast', 'slow'). Default: 400.</li>
+                                   <li><code>easing</code> (string): The easing function ('linear', 'swing', etc.). Default: 'swing'.</li>
+                                   <li><code>after</code> (function): A callback to run after the animation. `this` refers to the DOM element.</li>
+                              </ul>
+                         </td>
+                    </tr>
+               </tbody>
+          </table>
+
+          <h2>Parameters (Shorthand Methods)</h2>
+          <p>Applies to: <code>.fadeIn()</code>, <code>.fadeOut()</code>, <code>.fadeToggle()</code>, <code>.slideDown()</code>, <code>.slideUp()</code>, <code>.slideToggle()</code>.</p>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>duration</strong></td>
+                         <td>number | string</td>
+                         <td>Optional. Duration in milliseconds or a preset ('fast', 'slow'). Default: 400.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>callback</strong></td>
+                         <td>function</td>
+                         <td>Optional. A function to call once the animation completes.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

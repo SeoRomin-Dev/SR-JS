@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.eq() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.eq()</h1>
+          <p>Reduce the set of matched elements to the one at the specified index.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Positive Index</h3>
+          <pre class="example"><code>// &lt;li&gt;A&lt;/li&gt;&lt;li&gt;B&lt;/li&gt;&lt;li&gt;C&lt;/li&gt;
+$('li').eq(1).addClass('selected');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;li&gt;A&lt;/li&gt;
+&lt;li class="selected"&gt;B&lt;/li&gt;
+&lt;li&gt;C&lt;/li&gt;</code></pre>
+
+          <h3>2. Negative Index</h3>
+          <pre class="example"><code>$('li').eq(-1).addClass('last');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;li&gt;A&lt;/li&gt;
+&lt;li&gt;B&lt;/li&gt;
+&lt;li class="last"&gt;C&lt;/li&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>index</strong></td>
+                         <td>number</td>
+                         <td>An integer indicating the 0-based position of the element. If negative, counts from the end of the set.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

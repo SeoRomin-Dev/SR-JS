@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.is() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.is()</h1>
+          <p>Check the current matched set of elements against a selector, element, or function.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Check selector</h3>
+          <pre class="example"><code>const isChecked = $('input[type="checkbox"]').is(':checked');</code></pre>
+          <h4>Result</h4>
+          <pre><code>true // if at least one checkbox is checked</code></pre>
+
+          <h3>2. Custom Pseudo-selectors</h3>
+          <pre class="example"><code>// &lt;div id="box" style="display:none"&gt;&lt;/div&gt;
+const isVisible = $('#box').is(':visible');</code></pre>
+          <h4>Result</h4>
+          <pre><code>false</code></pre>
+
+          <h3>3. Check against Function</h3>
+          <pre class="example"><code>const hasLongText = $('p').is(function(index) {
+     return this.textContent.length > 100;
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>true // if matched logic</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>selector</strong></td>
+                         <td>string | function | element | SR</td>
+                         <td>A selector expression, a function, a DOM element, or an SR object to match against.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> Boolean.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

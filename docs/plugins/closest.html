@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.closest() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.closest()</h1>
+          <p>For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Find ancestor by selector</h3>
+          <pre class="example"><code>// &lt;form&gt;&lt;div&gt;&lt;input&gt;&lt;/div&gt;&lt;/form&gt;
+$('input').closest('form').addClass('found');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;form class="found"&gt;...&lt;/form&gt;</code></pre>
+
+          <h3>2. Find closest matching the element itself</h3>
+          <pre class="example"><code>// &lt;div class="active"&gt;&lt;/div&gt;
+$('div.active').closest('.active');</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Returns the div itself
+&lt;div class="active"&gt;&lt;/div&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>selector</strong></td>
+                         <td>string | element | SR</td>
+                         <td>A string selector, DOM element, or SR object to match against.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

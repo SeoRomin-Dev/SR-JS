@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.show() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.show()</h1>
+          <p>Display the matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Show element</h3>
+          <pre class="example"><code>// &lt;div class="box" style="display: none;"&gt;&lt;/div&gt;
+$('.box').show();</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="box" style="display: block;"&gt;&lt;/div&gt;</code></pre>
+
+          <h2>Details</h2>
+          <p>Restores the display property to what it was before <code>.hide()</code> was called. If no previous state is stored, it tries to determine the default display for the element type (e.g., `block` for div, `inline` for span). It also correctly handles the SVG `display` attribute.</p>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

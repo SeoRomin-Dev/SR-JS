@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.addClass() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.addClass()</h1>
+          <p>Adds the specified class(es) to each element in the set of matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Add a single class</h3>
+          <pre class="example"><code>$('div').addClass('active');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="active"&gt;&lt;/div&gt;</code></pre>
+
+          <h3>2. Add multiple classes</h3>
+          <pre class="example"><code>$('p').addClass('highlight bold text-center');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;p class="highlight bold text-center"&gt;&lt;/p&gt;</code></pre>
+
+          <h3>3. Chaining</h3>
+          <pre class="example"><code>$('span').addClass('visible').text('Hello');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;span class="visible"&gt;Hello&lt;/span&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>className</strong></td>
+                         <td>string</td>
+                         <td>One or more space-separated classes to be added to the class attribute of each matched element.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

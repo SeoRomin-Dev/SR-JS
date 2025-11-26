@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.prev() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.prev()</h1>
+          <p>Get the immediately preceding sibling of each element in the set of matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Get previous sibling</h3>
+          <pre class="example"><code>// &lt;label&gt;Name&lt;/label&gt;&lt;input class="current"&gt;
+$('.current').prev().addClass('bold');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;label class="bold"&gt;Name&lt;/label&gt;
+&lt;input class="current"&gt;</code></pre>
+
+          <h3>2. Filter previous</h3>
+          <pre class="example"><code>$('li').prev('.header').addClass('highlight');</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Adds 'highlight' to the previous sibling
+// ONLY IF it matches '.header'.</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>selector</strong></td>
+                         <td>string</td>
+                         <td>Optional. If specified, retrieves the previous sibling only if it matches this selector.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

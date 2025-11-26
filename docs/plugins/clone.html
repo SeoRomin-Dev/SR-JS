@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.clone() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.clone()</h1>
+          <p>Create a deep copy of the set of matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Basic Clone</h3>
+          <pre class="example"><code>// &lt;div class="original"&gt;Hi&lt;/div&gt;
+const $clone = $('.original').clone();
+$clone.addClass('copy').appendTo('body');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="original"&gt;Hi&lt;/div&gt;
+&lt;div class="original copy"&gt;Hi&lt;/div&gt;</code></pre>
+
+          <h3>2. Clone with Data and Events</h3>
+          <pre class="example"><code>const $smartClone = $('.btn').clone(true);</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Returns a new SR object with elements that have
+// the same event listeners as the original .btn elements.</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>withDataAndEvents</strong></td>
+                         <td>boolean</td>
+                         <td>Optional. If <code>true</code>, copies event handlers and data for the element itself. Default: <code>false</code>.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>deepWithDataAndEvents</strong></td>
+                         <td>boolean</td>
+                         <td>Optional. If <code>true</code>, copies event handlers and data for all children of the cloned element. Defaults to the value of the first argument.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object containing the cloned elements.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.prepend() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.prepend()</h1>
+          <p>Insert content to the beginning of each element in the set of matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Prepend HTML</h3>
+          <pre class="example"><code>// &lt;ul&gt;&lt;li&gt;B&lt;/li&gt;&lt;/ul&gt;
+$('ul').prepend('&lt;li&gt;A&lt;/li&gt;');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;ul&gt;
+     &lt;li&gt;A&lt;/li&gt;
+     &lt;li&gt;B&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+          <h3>2. Prepend Element</h3>
+          <pre class="example"><code>const $icon = $.t('&lt;i&gt;');
+$('button').prepend($icon);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;button&gt;
+     &lt;i&gt;&lt;/i&gt;
+     Click Text
+&lt;/button&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>content</strong></td>
+                         <td>string | element | SR</td>
+                         <td>HTML string, DOM element, or SR object to insert at the beginning of each matched element.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

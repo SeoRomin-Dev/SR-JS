@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.data() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.data()</h1>
+          <p>Store arbitrary data associated with the matched elements or return the value at the named data store for the first element.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Store data</h3>
+          <pre class="example"><code>$('div').data('role', 'admin');</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Data is stored internally.
+// $('div').data('role') returns "admin"</code></pre>
+
+          <h3>2. Store object</h3>
+          <pre class="example"><code>$('div').data({ id: 123, active: true });</code></pre>
+          <h4>Result</h4>
+          <pre><code>// $('div').data('id') returns 123
+// $('div').data('active') returns true</code></pre>
+
+          <h3>3. Read from data-* attribute</h3>
+          <pre class="example"><code>// &lt;div data-user='{"name":"John"}'&gt;&lt;/div&gt;
+const user = $('div').data('user');</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Returns parsed object
+{ name: "John" }</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>name</strong></td>
+                         <td>string | object</td>
+                         <td>The name of the data key, or an object of key-value pairs to set.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>value</strong></td>
+                         <td>any</td>
+                         <td>The value to store. If <code>undefined</code>, acts as a getter.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The data value for getter, or the original <code>SR</code> object for setter.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

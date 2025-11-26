@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.on() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.on()</h1>
+          <p>Attach an event handler function for one or more events to the selected elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Direct binding</h3>
+          <pre class="example"><code>$('button').on('click', function(e) {
+     console.log('Clicked!', this);
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Console Output on click:
+"Clicked!" &lt;button&gt;...&lt;/button&gt;</code></pre>
+
+          <h3>2. Delegated binding</h3>
+          <pre class="example"><code>$('#container').on('click', '.btn', function() {
+     console.log('Button inside container clicked');
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Events bubble up to #container.
+// Handler runs only if target matches .btn.</code></pre>
+
+          <h3>3. Multiple events map</h3>
+          <pre class="example"><code>$('input').on({
+     focus: function() { console.log('focused'); },
+     blur: function() { console.log('blurred'); }
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Handlers attached for both events.</code></pre>
+
+          <h3>4. Using namespaces</h3>
+          <pre class="example"><code>// Bind two click handlers
+$('#myBtn').on('click', () => console.log('Regular click'));
+$('#myBtn').on('click.myPlugin', () => console.log('Plugin click'));
+
+// Later, remove only the namespaced one
+$('#myBtn').off('click.myPlugin');</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Initially, clicking the button logs both messages.
+// After .off('click.myPlugin'), only 'Regular click' is logged.
+// This prevents unintentionally removing other scripts' handlers.</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>eventType</strong></td>
+                         <td>string | object</td>
+                         <td>One or more space-separated event types (e.g., 'click', 'submit keydown'), or an object of event types and handlers.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>selector</strong></td>
+                         <td>string</td>
+                         <td>A selector string to filter the descendants of the selected elements that trigger the event. If null/undefined, the handler is bound directly.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>handler</strong></td>
+                         <td>function</td>
+                         <td>A function to execute when the event is triggered.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>options</strong></td>
+                         <td>object</td>
+                         <td>Optional settings:
+                              <ul>
+                                   <li><code>once</code> (boolean): If true, listener is removed after first trigger.</li>
+                                   <li><code>passive</code> (boolean): If true, indicates the handler will not call <code>preventDefault()</code>.</li>
+                              </ul>
+                         </td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

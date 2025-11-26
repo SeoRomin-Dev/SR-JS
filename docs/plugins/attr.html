@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.attr() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.attr()</h1>
+          <p>Get the value of an attribute for the first element in the set of matched elements or set one or more attributes for every matched element.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Get attribute</h3>
+          <pre class="example"><code>// &lt;a id="home" href="/index.html"&gt;Home&lt;/a&gt;
+const href = $('a#home').attr('href');</code></pre>
+          <h4>Result</h4>
+          <pre><code>"/index.html"</code></pre>
+
+          <h3>2. Set single attribute</h3>
+          <pre class="example"><code>$('img').attr('alt', 'A beautiful landscape');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;img alt="A beautiful landscape"&gt;</code></pre>
+
+          <h3>3. Set multiple attributes</h3>
+          <pre class="example"><code>$('input').attr({
+     'type': 'text',
+     'placeholder': 'Enter name',
+     'readonly': null // Removes attribute
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;input type="text" placeholder="Enter name"&gt;</code></pre>
+
+          <h3>4. Set using a function</h3>
+          <pre class="example"><code>$('li').attr('data-index', (index) => `item-${index}`);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;li data-index="item-0"&gt;&lt;/li&gt;
+&lt;li data-index="item-1"&gt;&lt;/li&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>name</strong></td>
+                         <td>string | object</td>
+                         <td>The name of the attribute to set/get, or an object of attribute-value pairs.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>value</strong></td>
+                         <td>string | number | null | function</td>
+                         <td>The value to set the attribute to. If <code>null</code>, the attribute is removed. If a function, it is called for each element with arguments <code>(index, currentValue)</code>.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The attribute value (string/undefined) for getter, or the original <code>SR</code> object for setter.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

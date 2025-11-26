@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.prop() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.prop()</h1>
+          <p>Get the value of a property for the first element or set one or more properties for every matched element.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Get Property</h3>
+          <pre class="example"><code>// &lt;input type="checkbox" checked&gt;
+const isChecked = $('input').prop('checked');</code></pre>
+          <h4>Result</h4>
+          <pre><code>true</code></pre>
+
+          <h3>2. Set Property</h3>
+          <pre class="example"><code>$('input').prop('disabled', true);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;input disabled&gt;</code></pre>
+
+          <h3>3. Set with Function</h3>
+          <pre class="example"><code>$('input').prop('checked', (index, oldVal) => !oldVal);</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Checkbox state is inverted</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>name</strong></td>
+                         <td>string | object</td>
+                         <td>The name of the property (e.g., 'checked', 'disabled', 'selectedIndex'), or an object of property-value pairs.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>value</strong></td>
+                         <td>any | function</td>
+                         <td>The value to set. If a function, it is called for each element with <code>(index, currentValue)</code>.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The property value for getter, or the original <code>SR</code> object for setter.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

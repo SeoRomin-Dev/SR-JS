@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>$.assign() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>$.assign()</h1>
+          <p>Extends the target object by copying properties from source objects.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Shallow Merge</h3>
+          <pre class="example"><code>const target = { a: 1 };
+const source = { b: 2 };
+$.assign(target, source);</code></pre>
+          <h4>Result</h4>
+          <pre><code>// target is now:
+{ a: 1, b: 2 }</code></pre>
+
+          <h3>2. Deep Merge</h3>
+          <pre class="example"><code>const defaults = { theme: { color: 'blue', font: 'arial' } };
+const options = { theme: { color: 'red' } };
+// Pass true for deep merge
+const final = $.assign(true, {}, defaults, options);</code></pre>
+          <h4>Result</h4>
+          <pre><code>// final object:
+{
+     theme: {
+          color: 'red',
+          font: 'arial'
+     }
+}</code></pre>
+
+          <h3>3. Multiple sources</h3>
+          <pre class="example"><code>const obj = $.assign({}, {a:1}, {b:2}, {c:3});</code></pre>
+          <h4>Result</h4>
+          <pre><code>{ a: 1, b: 2, c: 3 }</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>deep</strong></td>
+                         <td>boolean</td>
+                         <td>Optional. If true, the merge becomes recursive (deep copy).</td>
+                    </tr>
+                    <tr>
+                         <td><strong>target</strong></td>
+                         <td>object</td>
+                         <td>The object to receive the new properties.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>...sources</strong></td>
+                         <td>object</td>
+                         <td>One or more objects containing the properties to merge.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The modified target object.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

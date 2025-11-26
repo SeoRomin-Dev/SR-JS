@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.prependTo() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.prependTo()</h1>
+          <p>Insert every element in the set of matched elements to the beginning of the target.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Create and Prepend</h3>
+          <pre class="example"><code>$.t('&lt;li&gt;', { text: 'Start' }).prependTo('ul');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;ul&gt;
+     &lt;li&gt;Start&lt;/li&gt;
+     &lt;li&gt;End&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+          <h3>2. Move existing</h3>
+          <pre class="example"><code>$('.new-item').prependTo('#feed');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div id="feed"&gt;
+     &lt;div class="new-item"&gt;...&lt;/div&gt;
+     &lt;!-- existing feed items --&gt;
+&lt;/div&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>target</strong></td>
+                         <td>string | element | SR</td>
+                         <td>A selector, element, or SR object. The matched elements will be inserted at the beginning of this target.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object containing all inserted elements.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

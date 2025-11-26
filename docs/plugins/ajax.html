@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>$.ajax() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>$.ajax()</h1>
+          <p>Performs an asynchronous HTTP (Ajax) request using the Fetch API.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Basic GET Request</h3>
+          <pre class="example"><code>$.ajax({
+     url: '/api/users',
+     method: 'GET',
+     dataType: 'json',
+     data: { page: 1, limit: 10 }
+})
+.then(response => {
+     console.log('Success:', response);
+})
+.catch(error => {
+     console.error('Request failed:', error);
+})
+.finally(() => {
+     console.log('Cleanup actions');
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Console Output (JSON Object)
+{
+     "page": 1,
+     "users": [...]
+}</code></pre>
+
+          <h3>2. POST Request with JSON Data</h3>
+          <pre class="example"><code>$.ajax({
+     url: '/api/save',
+     method: 'POST',
+     contentType: 'application/json',
+     data: { name: 'John', age: 30 }
+})
+.then(data => console.log('Saved:', data))
+.catch(err => console.error(err));</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Network Request Payload
+{
+     "name": "John",
+     "age": 30
+}</code></pre>
+
+          <h3>3. POST Request with FormData (File Upload)</h3>
+          <pre class="example"><code>// Assuming a file input on the page: &lt;input type="file" id="fileUpload"&gt;
+const fileInput = $('#fileUpload')[0];
+const formData = new FormData();
+formData.append('file', fileInput.files[0]);
+
+$.ajax({
+     url: '/upload',
+     method: 'POST',
+     processData: false, 
+     contentType: false, 
+     data: formData
+})
+.then(res => console.log('Uploaded'))
+.catch(err => console.error('Upload failed'));</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Sends multipart/form-data request to /upload</code></pre>
+
+          <h2>Parameters</h2>
+          <p>The method accepts a configuration object with the following properties:</p>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Property</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>url</strong></td>
+                         <td>string</td>
+                         <td>The URL to request. Required.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>method</strong></td>
+                         <td>string</td>
+                         <td>HTTP method (e.g., 'GET', 'POST', 'PUT', 'DELETE'). Default is 'GET'.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>data</strong></td>
+                         <td>object | string | FormData</td>
+                         <td>Data to send. Converted to query string for GET, or body for POST.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>dataType</strong></td>
+                         <td>string</td>
+                         <td>Expected response type ('json', 'text', 'html', 'script'). Default is 'text'.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>headers</strong></td>
+                         <td>object</td>
+                         <td>Additional HTTP headers to send.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>contentType</strong></td>
+                         <td>string | boolean</td>
+                         <td>Content-Type header value. Set to <code>false</code> for FormData. Default: 'application/x-www-form-urlencoded; charset=UTF-8'.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>processData</strong></td>
+                         <td>boolean</td>
+                         <td>Whether to process the data object into a query string. Set to <code>false</code> when sending FormData or Blob. Default: <code>true</code>.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>cache</strong></td>
+                         <td>boolean</td>
+                         <td>Whether to allow caching for GET requests. If <code>false</code>, adds a timestamp. Default: <code>true</code>.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>timeout</strong></td>
+                         <td>number</td>
+                         <td>Request timeout in milliseconds. Default: 0 (no timeout).</td>
+                    </tr>
+                    <tr>
+                         <td><strong>xhrFields</strong></td>
+                         <td>object</td>
+                         <td>Options for the underlying request, e.g., <code>{ withCredentials: true }</code>.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A <code>Promise</code> that resolves with the response data or rejects with an error.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.add() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.add()</h1>
+          <p>Adds elements to the current set of matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Add by selector string</h3>
+          <pre class="example"><code>const $set = $('div').add('p');
+$set.css('border', '1px solid red');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;!-- matched elements --&gt;
+&lt;div style="border: 1px solid red;"&gt;...&lt;/div&gt;
+&lt;p style="border: 1px solid red;"&gt;...&lt;/p&gt;</code></pre>
+
+          <h3>2. Add elements from another SR object</h3>
+          <pre class="example"><code>const $spans = $('span');
+$('div').add($spans).addClass('highlight');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="highlight"&gt;&lt;/div&gt;
+&lt;span class="highlight"&gt;&lt;/span&gt;</code></pre>
+
+          <h3>3. Add a single element via an SR object</h3>
+          <pre class="example"><code>const $btn = $('#myBtn');
+$('div').add($btn).hide();</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div style="display: none;"&gt;&lt;/div&gt;
+&lt;button id="myBtn" style="display: none;"&gt;Click&lt;/button&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>selector</strong></td>
+                         <td>string | element | SR</td>
+                         <td>A string selector, a DOM element, or an SR object to add to the set.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object containing the combined set.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

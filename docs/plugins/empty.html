@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.empty() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.empty()</h1>
+          <p>Remove all child nodes of the set of matched elements from the DOM.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Clear content</h3>
+          <pre class="example"><code>// &lt;div class="container"&gt;&lt;p&gt;Text&lt;/p&gt;&lt;/div&gt;
+$('.container').empty();</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="container"&gt;&lt;/div&gt;</code></pre>
+
+          <h2>Details</h2>
+          <p>This method proactively cleans up internal data and event listeners attached to the child elements before removing them, preventing memory leaks.</p>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

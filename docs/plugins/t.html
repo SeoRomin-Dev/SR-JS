@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>$.t() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>$.t()</h1>
+          <p>Static element creator helper.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Create element</h3>
+          <pre class="example"><code>const $btn = $.t('&lt;button&gt;', {
+     class: 'btn btn-primary',
+     text: 'Click Me',
+     click: () => console.log('Hi')
+});
+$('body').append($btn);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;button class="btn btn-primary"&gt;Click Me&lt;/button&gt;</code></pre>
+
+          <h3>2. Create structure</h3>
+          <pre class="example"><code>const $card = $.t('&lt;div&gt;', {
+     class: 'card',
+     html: '&lt;h1&gt;Title&lt;/h1&gt;',
+     css: { border: '1px solid black' },
+     data: { id: 101 }
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="card" style="border: 1px solid black;"&gt;
+     &lt;h1&gt;Title&lt;/h1&gt;
+&lt;/div&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>html</strong></td>
+                         <td>string</td>
+                         <td>An HTML string representing the element to create (e.g., <code>&lt;div&gt;</code>).</td>
+                    </tr>
+                    <tr>
+                         <td><strong>props</strong></td>
+                         <td>object</td>
+                         <td>An object of properties, attributes, and events to apply. Supported keys:
+                              <ul>
+                                   <li><code>class</code> (string): Sets the class attribute.</li>
+                                   <li><code>text</code> (string): Sets text content.</li>
+                                   <li><code>html</code> (string): Sets inner HTML.</li>
+                                   <li><code>css</code> (object): Sets CSS styles via <code>.css()</code>.</li>
+                                   <li><code>data</code> (object): Sets data properties via <code>.data()</code>.</li>
+                                   <li><code>[event]</code> (function): Binds an event handler (e.g., <code>click: fn</code>).</li>
+                                   <li>Any other key is set as an attribute or property (e.g., <code>id</code>, <code>href</code>, <code>value</code>).</li>
+                              </ul>
+                         </td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object containing the created element.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

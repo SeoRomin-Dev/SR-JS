@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.after() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.after()</h1>
+          <p>Inserts content, specified by the parameter, after each element in the set of matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Insert HTML string</h3>
+          <pre class="example"><code>$('p').after('&lt;hr&gt;');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;p&gt;Paragraph content&lt;/p&gt;
+&lt;hr&gt;</code></pre>
+
+          <h3>2. Insert existing element (Move)</h3>
+          <pre class="example"><code>// Moves #sidebar element after .container
+$('.container').after($('#sidebar'));</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="container"&gt;...&lt;/div&gt;
+&lt;div id="sidebar"&gt;...&lt;/div&gt;</code></pre>
+
+          <h3>3. Insert newly created element</h3>
+          <pre class="example"><code>const $newDiv = $.t('&lt;div&gt;', { text: 'Footer' });
+$('main').after($newDiv);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;main&gt;...&lt;/main&gt;
+&lt;div&gt;Footer&lt;/div&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>content</strong></td>
+                         <td>string | element | SR</td>
+                         <td>HTML string, DOM element, or SR object to insert after each matched element.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

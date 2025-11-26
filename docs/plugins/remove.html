@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.remove() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.remove()</h1>
+          <p>Remove the set of matched elements from the DOM.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Remove elements</h3>
+          <pre class="example"><code>// &lt;div class="box"&gt;A&lt;/div&gt;&lt;div class="box"&gt;B&lt;/div&gt;
+$('.box').remove();</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Elements are removed from DOM.
+// Returns SR object (now empty of elements)</code></pre>
+
+          <h2>Details</h2>
+          <p>Also removes all event handlers and internal data associated with the matched elements and their descendants to prevent memory leaks.</p>
+          <p><strong>Returns:</strong> The <code>SR</code> object (emptied of its internal element list).</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

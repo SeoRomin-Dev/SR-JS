@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.html() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.html()</h1>
+          <p>Get the HTML contents of the first element in the set of matched elements or set the HTML contents of every matched element.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Get HTML</h3>
+          <pre class="example"><code>// &lt;div class="content"&gt;&lt;span&gt;Hi&lt;/span&gt;&lt;/div&gt;
+const content = $('.content').html();</code></pre>
+          <h4>Result</h4>
+          <pre><code>"&lt;span&gt;Hi&lt;/span&gt;"</code></pre>
+
+          <h3>2. Set HTML</h3>
+          <pre class="example"><code>$('.content').html('&lt;strong&gt;New Content&lt;/strong&gt;');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="content"&gt;
+     &lt;strong&gt;New Content&lt;/strong&gt;
+&lt;/div&gt;</code></pre>
+
+          <h3>3. Set with Function</h3>
+          <pre class="example"><code>$('div').html((index) => `&lt;span&gt;Item ${index}&lt;/span&gt;`);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div&gt;&lt;span&gt;Item 0&lt;/span&gt;&lt;/div&gt;
+&lt;div&gt;&lt;span&gt;Item 1&lt;/span&gt;&lt;/div&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>content</strong></td>
+                         <td>string | function</td>
+                         <td>The HTML string to set, or a function that returns an HTML string. Function receives <code>(index, currentHtml)</code>.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The innerHTML string for getter, or the original <code>SR</code> object for setter.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

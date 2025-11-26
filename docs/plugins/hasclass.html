@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.hasClass() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.hasClass()</h1>
+          <p>Determine whether any of the matched elements are assigned the given class.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Check for class</h3>
+          <pre class="example"><code>// &lt;div id="menu" class="open"&gt;&lt;/div&gt;
+const isOpen = $('#menu').hasClass('open');</code></pre>
+          <h4>Result</h4>
+          <pre><code>true</code></pre>
+
+          <h3>2. Check in a set</h3>
+          <pre class="example"><code>const hasError = $('input').hasClass('error');</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Returns true if *at least one* element has the class
+true</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>className</strong></td>
+                         <td>string</td>
+                         <td>The class name to search for.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> Boolean.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

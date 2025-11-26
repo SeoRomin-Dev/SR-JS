@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.next() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.next()</h1>
+          <p>Get the immediately following sibling of each element in the set of matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Get next sibling</h3>
+          <pre class="example"><code>// &lt;h1&gt;Title&lt;/h1&gt;&lt;p&gt;Text&lt;/p&gt;
+$('h1').next().css('color', 'red');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;h1&gt;Title&lt;/h1&gt;
+&lt;p style="color: red;"&gt;Text&lt;/p&gt;</code></pre>
+
+          <h3>2. Filter next sibling</h3>
+          <pre class="example"><code>// &lt;li&gt;A&lt;/li&gt;&lt;li class="selected"&gt;B&lt;/li&gt;
+$('li').next('.selected').addClass('highlight');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;li&gt;A&lt;/li&gt;
+&lt;li class="selected highlight"&gt;B&lt;/li&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>selector</strong></td>
+                         <td>string</td>
+                         <td>Optional. If specified, retrieves the next sibling only if it matches this selector.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

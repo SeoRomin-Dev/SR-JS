@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.val() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.val()</h1>
+          <p>Get the current value of the first element in the set of matched elements or set the value of every matched element.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Get Value</h3>
+          <pre class="example"><code>// &lt;input value="Hello"&gt;
+const val = $('input').val();</code></pre>
+          <h4>Result</h4>
+          <pre><code>"Hello"</code></pre>
+
+          <h3>2. Set Value</h3>
+          <pre class="example"><code>$('input').val('New Value');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;input value="New Value"&gt;</code></pre>
+
+          <h3>3. Handle Select Multiple</h3>
+          <pre class="example"><code>// &lt;select multiple&gt;...&lt;/select&gt;
+$('select').val(['option1', 'option2']);</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Options with values 'option1' and 'option2' are selected.</code></pre>
+
+          <h3>4. Set with Function</h3>
+          <pre class="example"><code>$('input').val((index, value) => value.toUpperCase());</code></pre>
+          <h4>Result</h4>
+          <pre><code>// "hello" becomes "HELLO"</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>value</strong></td>
+                         <td>string | number | array | function</td>
+                         <td>The value to set. For multiple selects or checkboxes/radios, pass an array of values. If a function, it is called with <code>(index, currentValue)</code>.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The value for getter, or the original <code>SR</code> object for setter.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.removeData() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.removeData()</h1>
+          <p>Remove a previously-stored piece of data.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Remove specific key</h3>
+          <pre class="example"><code>$('div').data('id', 123);
+$('div').removeData('id');</code></pre>
+          <h4>Result</h4>
+          <pre><code>// $('div').data('id') returns undefined</code></pre>
+
+          <h3>2. Remove all data</h3>
+          <pre class="example"><code>$('div').removeData();</code></pre>
+          <h4>Result</h4>
+          <pre><code>// All internal cached data for the element is cleared.</code></pre>
+
+          <h3>3. Remove multiple keys</h3>
+          <pre class="example"><code>$('div').data({ id: 1, role: 'user' });
+$('div').removeData('id role'); // or ['id', 'role']</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Both 'id' and 'role' are removed from internal cache.
+// $('div').data() would return {}.</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>name</strong></td>
+                         <td>string | array</td>
+                         <td>Optional. A space-separated string or an array of keys to delete. If omitted, all data for the element is removed.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

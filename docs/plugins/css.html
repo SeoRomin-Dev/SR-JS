@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.css() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.css()</h1>
+          <p>Get the computed style properties for the first element in the set of matched elements or set one or more CSS properties for every matched element.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Get property</h3>
+          <pre class="example"><code>const color = $('p').css('color');</code></pre>
+          <h4>Result</h4>
+          <pre><code>"rgb(0, 0, 0)"</code></pre>
+
+          <h3>2. Set property</h3>
+          <pre class="example"><code>$('.box').css('background-color', 'red');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="box" style="background-color: red;"&gt;&lt;/div&gt;</code></pre>
+
+          <h3>3. Set multiple properties</h3>
+          <pre class="example"><code>$('.box').css({
+     'width': 100,
+     'height': '100px',
+     'opacity': 0.5
+});</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="box" style="width: 100px; height: 100px; opacity: 0.5;"&gt;&lt;/div&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>prop</strong></td>
+                         <td>string | object</td>
+                         <td>The name of the CSS property (camelCase or kebab-case), or an object of property-value pairs.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>value</strong></td>
+                         <td>string | number</td>
+                         <td>The value to set. Numbers are automatically converted to pixels for appropriate properties.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The property value (string) for getter, or the original <code>SR</code> object for setter.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

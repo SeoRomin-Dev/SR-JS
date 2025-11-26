@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.toggleClass() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.toggleClass()</h1>
+          <p>Add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the state argument.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Toggle class</h3>
+          <pre class="example"><code>// &lt;div class="box"&gt;&lt;/div&gt;
+$('div').toggleClass('active');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="box active"&gt;&lt;/div&gt;</code></pre>
+
+          <h3>2. Force Add (state=true)</h3>
+          <pre class="example"><code>$('div').toggleClass('active', true);</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Adds 'active' regardless of current state
+&lt;div class="box active"&gt;&lt;/div&gt;</code></pre>
+
+          <h3>3. Force Remove (state=false)</h3>
+          <pre class="example"><code>$('div').toggleClass('active', false);</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Removes 'active'
+&lt;div class="box"&gt;&lt;/div&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>className</strong></td>
+                         <td>string</td>
+                         <td>One or more class names (separated by spaces) to be toggled for each element in the matched set.</td>
+                    </tr>
+                    <tr>
+                         <td><strong>state</strong></td>
+                         <td>boolean</td>
+                         <td>Optional. A boolean (true for adding, false for removing) to force the class state.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

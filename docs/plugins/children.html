@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.children() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.children()</h1>
+          <p>Get the children of each element in the set of matched elements, optionally filtered by a selector.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Get all children</h3>
+          <pre class="example"><code>const $kids = $('ul').children();</code></pre>
+          <h4>Result</h4>
+          <pre><code>// SR Object containing all direct &lt;li&gt; children
+[ &lt;li&gt;Item 1&lt;/li&gt;, &lt;li&gt;Item 2&lt;/li&gt; ]</code></pre>
+
+          <h3>2. Get filtered children</h3>
+          <pre class="example"><code>const $active = $('ul').children('.active');</code></pre>
+          <h4>Result</h4>
+          <pre><code>// SR Object containing only matching children
+[ &lt;li class="active"&gt;Item 2&lt;/li&gt; ]</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>selector</strong></td>
+                         <td>string</td>
+                         <td>Optional. A string containing a selector expression to match elements against.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>SR JS Library - Documentation</title>
+     <link rel="stylesheet" href="style.css">
+</head>
+<body>
+     <div class="container">
+          <h1>SeoRomin JS Library</h1>
+          <p>A pure JavaScript library for DOM manipulation, events, and animations. It provides a familiar chaining syntax while utilizing modern browser APIs for maximum performance.</p>
+
+          <h2>Installation</h2>
+          <p>Include the minified script in your HTML file before your custom scripts.</p>
+          <pre class="example"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+     &lt;meta charset="UTF-8"&gt;
+     &lt;title&gt;My App&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+     &lt;h1&gt;Hello World&lt;/h1&gt;
+     
+     &lt;!-- Include SR JS --&gt;
+     &lt;script src="sr.min.js"&gt;&lt;/script&gt;
+     
+     &lt;!-- Your Code --&gt;
+     &lt;script&gt;
+          // Wait for DOM Ready
+          $(function() {
+                $('h1').text('SR JS is working!');
+          });
+     &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+          <h2>Extending SR JS</h2>
+          <p>You can easily extend the library with custom plugins or static methods.</p>
+          
+          <h3>1. Add an Instance Plugin</h3>
+          <p>Use <code>$.plugin</code> to add methods available on SR objects (like <code>$('div').myMethod()</code>).</p>
+          <pre class="example"><code>$.plugin('color', function(color) {
+     // 'this' refers to the SR object
+     this.css('color', color);
+     return this; // Enable chaining
+});
+
+// Usage
+$('p').color('red');</code></pre>
+
+          <h3>2. Add a Static Method</h3>
+          <p>Use <code>$.method</code> to add utility functions directly to the <code>$</code> object.</p>
+          <pre class="example"><code>$.method('sum', function(a, b) {
+     return a + b;
+});
+
+// Usage
+console.log($.sum(10, 20)); // 30</code></pre>
+
+          <h2>Documentation</h2>
+          <p>Browse the documentation for available methods and plugins:</p>
+          <ul class="plugin-list">
+               <li><a href="plugins/add.html">.add()</a></li>
+               <li><a href="plugins/addclass.html">.addClass()</a></li>
+               <li><a href="plugins/after.html">.after()</a></li>
+               <li><a href="plugins/ajax.html">$.ajax()</a></li>
+               <li><a href="plugins/animate.html">.animate()</a></li>
+               <li><a href="plugins/append.html">.append()</a></li>
+               <li><a href="plugins/appendto.html">.appendTo()</a></li>
+               <li><a href="plugins/assign.html">$.assign()</a></li>
+               <li><a href="plugins/attr.html">.attr()</a></li>
+               <li><a href="plugins/before.html">.before()</a></li>
+               <li><a href="plugins/children.html">.children()</a></li>
+               <li><a href="plugins/clone.html">.clone()</a></li>
+               <li><a href="plugins/closest.html">.closest()</a></li>
+               <li><a href="plugins/css.html">.css()</a></li>
+               <li><a href="plugins/data.html">.data()</a></li>
+               <li><a href="plugins/each.html">.each()</a></li>
+               <li><a href="plugins/empty.html">.empty()</a></li>
+               <li><a href="plugins/eq.html">.eq()</a></li>
+               <li><a href="plugins/filter.html">.filter()</a></li>
+               <li><a href="plugins/find.html">.find()</a></li>
+               <li><a href="plugins/first.html">.first()</a></li>
+               <li><a href="plugins/formdata.html">.formData()</a></li>
+               <li><a href="plugins/hasclass.html">.hasClass()</a></li>
+               <li><a href="plugins/hide.html">.hide()</a></li>
+               <li><a href="plugins/html.html">.html()</a></li>
+               <li><a href="plugins/is.html">.is()</a></li>
+               <li><a href="plugins/join.html">.join()</a></li>
+               <li><a href="plugins/last.html">.last()</a></li>
+               <li><a href="plugins/next.html">.next()</a></li>
+               <li><a href="plugins/off.html">.off()</a></li>
+               <li><a href="plugins/on.html">.on()</a></li>
+               <li><a href="plugins/one.html">.one()</a></li>
+               <li><a href="plugins/parent.html">.parent()</a></li>
+               <li><a href="plugins/prepend.html">.prepend()</a></li>
+               <li><a href="plugins/prependto.html">.prependTo()</a></li>
+               <li><a href="plugins/prev.html">.prev()</a></li>
+               <li><a href="plugins/prop.html">.prop()</a></li>
+               <li><a href="plugins/remove.html">.remove()</a></li>
+               <li><a href="plugins/removeattr.html">.removeAttr()</a></li>
+               <li><a href="plugins/removeclass.html">.removeClass()</a></li>
+               <li><a href="plugins/removedata.html">.removeData()</a></li>
+               <li><a href="plugins/replacewith.html">.replaceWith()</a></li>
+               <li><a href="plugins/show.html">.show()</a></li>
+               <li><a href="plugins/t.html">$.t()</a></li>
+               <li><a href="plugins/text.html">.text()</a></li>
+               <li><a href="plugins/toggleclass.html">.toggleClass()</a></li>
+               <li><a href="plugins/trigger.html">.trigger()</a></li>
+               <li><a href="plugins/val.html">.val()</a></li>
+          </ul>
+
+          <h2>Browser Support</h2>
+          <p>This library relies on modern JavaScript features including <code>Proxy</code>, <code>WeakMap</code>, and <code>structuredClone</code>. Below is the minimum browser support matrix.</p>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Browser</th>
+                         <th>Version</th>
+                         <th>Release Date</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>Google Chrome</strong></td>
+                         <td>98+</td>
+                         <td>Feb 2022</td>
+                    </tr>
+                    <tr>
+                         <td><strong>Mozilla Firefox</strong></td>
+                         <td>94+</td>
+                         <td>Nov 2021</td>
+                    </tr>
+                    <tr>
+                         <td><strong>Apple Safari</strong></td>
+                         <td>15.4+</td>
+                         <td>Mar 2022</td>
+                    </tr>
+                    <tr>
+                         <td><strong>Microsoft Edge</strong></td>
+                         <td>98+</td>
+                         <td>Feb 2022</td>
+                    </tr>
+               </tbody>
+          </table>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../dist/sr.min.js"></script>
+</body>
+</html>

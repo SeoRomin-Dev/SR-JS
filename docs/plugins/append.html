@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.append() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.append()</h1>
+          <p>Inserts content to the end of each element in the set of matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Append HTML string</h3>
+          <pre class="example"><code>$('ul').append('&lt;li&gt;New Item&lt;/li&gt;');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;ul&gt;
+     &lt;li&gt;Existing Item&lt;/li&gt;
+     &lt;li&gt;New Item&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+
+          <h3>2. Append existing element (Move)</h3>
+          <pre class="example"><code>// Moves #footer to inside .container
+$('.container').append($('#footer'));</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="container"&gt;
+     &lt;!-- other content --&gt;
+     &lt;div id="footer"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+          <h3>3. Append SR Object</h3>
+          <pre class="example"><code>const $spans = $('span.highlight');
+$('div').append($spans);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div&gt;
+     &lt;!-- other content --&gt;
+     &lt;span class="highlight"&gt;...&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>content</strong></td>
+                         <td>string | element | SR</td>
+                         <td>HTML string, DOM element, or SR object to insert at the end of each matched element.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

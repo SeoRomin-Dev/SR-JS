@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.formData() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.formData()</h1>
+          <p>Extracts data from the first form in the collection.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Get native FormData object</h3>
+          <pre class="example"><code>const formData = $('#myForm').formData();</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Returns native FormData instance
+FormData { ... }</code></pre>
+
+          <h3>2. Get plain object (Serialize)</h3>
+          <pre class="example"><code>const data = $('#myForm').formData(true);</code></pre>
+          <h4>Result</h4>
+          <pre><code>{
+     "username": "john",
+     "password": "123",
+     "roles": ["admin", "editor"]
+}</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>serialize</strong></td>
+                         <td>boolean</td>
+                         <td>If <code>true</code>, returns a plain JavaScript object (similar to <code>serializeArray</code>). If <code>false</code> (default), returns a native <code>FormData</code> object.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> <code>FormData</code> or <code>Object</code>.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

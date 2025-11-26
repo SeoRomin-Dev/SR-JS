@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.before() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.before()</h1>
+          <p>Inserts content, specified by the parameter, before each element in the set of matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Insert HTML string</h3>
+          <pre class="example"><code>$('.content').before('&lt;h2&gt;Introduction&lt;/h2&gt;');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;div class="content"&gt;...&lt;/div&gt;</code></pre>
+
+          <h3>2. Insert Element</h3>
+          <pre class="example"><code>const $icon = $.t('&lt;i&gt;', { class: 'icon-star' });
+$('button').before($icon);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;i class="icon-star"&gt;&lt;/i&gt;
+&lt;button&gt;...&lt;/button&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>content</strong></td>
+                         <td>string | element | SR</td>
+                         <td>HTML string, DOM element, or SR object to insert before each matched element.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> The original <code>SR</code> object for chaining.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

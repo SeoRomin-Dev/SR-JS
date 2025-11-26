@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.filter() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.filter()</h1>
+          <p>Reduce the set of matched elements to those that match the selector or pass the function's test.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Filter by selector</h3>
+          <pre class="example"><code>$('li').filter('.active').css('color', 'red');</code></pre>
+          <h4>Result</h4>
+          <pre><code>// Only matching elements are modified
+&lt;li class="active" style="color: red;"&gt;...&lt;/li&gt;
+&lt;li&gt;...&lt;/li&gt;</code></pre>
+
+          <h3>2. Filter by function</h3>
+          <pre class="example"><code>$('li').filter((index) => index % 2 === 0).addClass('even');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;li class="even"&gt;Item 0&lt;/li&gt;
+&lt;li&gt;Item 1&lt;/li&gt;
+&lt;li class="even"&gt;Item 2&lt;/li&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>selector</strong></td>
+                         <td>string | function | element | SR</td>
+                         <td>A string containing a selector expression to match elements against, or a function to test each element, or an element/SR object to match.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object containing the filtered elements.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.appendTo() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.appendTo()</h1>
+          <p>Insert every element in the set of matched elements to the end of the target.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Create and Append</h3>
+          <pre class="example"><code>$.t('&lt;div&gt;', { text: 'Hello' }).appendTo('body');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;body&gt;
+     ...
+     &lt;div&gt;Hello&lt;/div&gt;
+&lt;/body&gt;</code></pre>
+
+          <h3>2. Move existing elements</h3>
+          <pre class="example"><code>$('.items').appendTo('#archive');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div id="archive"&gt;
+     &lt;!-- existing content --&gt;
+     &lt;div class="items"&gt;...&lt;/div&gt;
+     &lt;div class="items"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>target</strong></td>
+                         <td>string | element | SR</td>
+                         <td>A selector, element, or SR object. The matched elements will be inserted at the end of this target.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A new <code>SR</code> object containing all inserted elements (including clones and originals).</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>

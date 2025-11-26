@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <title>.text() - SR JS</title>
+     <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+     <div class="container">
+          <a href="../index.html" class="back-link">← Back to Index</a>
+          <h1>.text()</h1>
+          <p>Get the combined text contents of each element in the set of matched elements or set the text contents of the matched elements.</p>
+
+          <h2>Examples</h2>
+
+          <h3>1. Get Text</h3>
+          <pre class="example"><code>// &lt;h1&gt;Hello World&lt;/h1&gt;
+const title = $('h1').text();</code></pre>
+          <h4>Result</h4>
+          <pre><code>"Hello World"</code></pre>
+
+          <h3>2. Set Text (escaped)</h3>
+          <pre class="example"><code>$('h1').text('User input &lt;script&gt;');</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;h1&gt;User input &amp;lt;script&amp;gt;&lt;/h1&gt;</code></pre>
+
+          <h3>3. Set with Function</h3>
+          <pre class="example"><code>// &lt;li&gt;A&lt;/li&gt;
+$('li').text((index, text) => `${index}. ${text}`);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;li&gt;0. A&lt;/li&gt;</code></pre>
+
+          <h2>Parameters</h2>
+          <table class="params-table">
+               <thead>
+                    <tr>
+                         <th>Parameter</th>
+                         <th>Type</th>
+                         <th>Description</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr>
+                         <td><strong>content</strong></td>
+                         <td>string | function</td>
+                         <td>The text to set, or a function that returns the text. Function receives <code>(index, currentText)</code>.</td>
+                    </tr>
+               </tbody>
+          </table>
+          <p><strong>Returns:</strong> A string for getter, or the original <code>SR</code> object for setter.</p>
+
+          <div class="footer">
+               &copy; by SeoRomin. All rights reserved.
+          </div>
+     </div>
+     <script src="../../dist/sr.min.js"></script>
+</body>
+</html>
