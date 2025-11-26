@@ -36,13 +36,21 @@ Include the minified script in your HTML file before your custom scripts.
 <script src="sr.min.js"></script>
 ```
 
+### Or use a CDN:
+
+jsDelivr is a great open-source service that lets you use projects without ever downloading the code.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/sr-js@latest"></script>
+```
+
 ### Or get it:
 
 [Download SR JS](https://raw.githubusercontent.com/SeoRomin-Dev/SR-JS/refs/heads/main/dist/sr.min.js)
 
 ### Or install with `npm`:
 
-npm is a front-end package manager that simplifies adding new packages.
+NPM is a front-end package manager that simplifies adding new packages.
 
 ```
 npm i sr-js
