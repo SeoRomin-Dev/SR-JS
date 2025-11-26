@@ -15,12 +15,14 @@
 		}
 
 		// Setter: .text( value | function )
+		const isFunction = typeof content === 'function';
+
 		this.each(function( index ) {
 			const el = this;
 			// Safe check: Ensure valid node before attempting to write
 			if( !el || !el.nodeType ) return;
 
-			const newContent = typeof content === 'function'
+			const newContent = isFunction
 				? content.call(el, index, el.textContent)
 				: content;
 

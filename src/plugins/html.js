@@ -14,6 +14,8 @@
 		}
 
 		// Setter: .html( newContent | function )
+		const isFunction = typeof content === 'function';
+
 		this.each(function( index ) {
 			// Safe check: Ensure valid Element node before accessing innerHTML
 			if( !this || this.nodeType !== 1 ) return;
@@ -22,7 +24,7 @@
 			// `cleanRoot` is false to preserve the parent's data/events
 			$._internal.cleanupNodeTree(this, false);
 
-			const newContent = typeof content === 'function'
+			const newContent = isFunction
 				? content.call(this, index, this.innerHTML)
 				: content;
 

@@ -30,12 +30,12 @@
 			return attrValue === null ? undefined : attrValue;
 		}
 
-		// Setter
-		this.each(function( index ) {
-			const element = this;
+		// --- SETTER ---
 
-			// .attr({ 'attr1': 'val1', ... })
-			if( typeof name === 'object' ) {
+		// Case 1: .attr({ 'attr1': 'val1', ... })
+		if( typeof name === 'object' ) {
+			this.each(function() {
+				const element = this;
 				for( const key in name ) {
 					if( Object.hasOwn(name, key) ) {
 						const val = name[key];
@@ -47,12 +47,17 @@
 						}
 					}
 				}
-			}
-			// .attr('attrName', 'value' | function)
-			else if( typeof name === 'string' ) {
+			});
+		}
+		// Case 2: .attr('attrName', 'value' | function)
+		else if( typeof name === 'string' ) {
+			const isFunction = typeof value === 'function';
+
+			this.each(function( index ) {
+				const element = this;
 				let finalValue = value;
 
-				if( typeof value === 'function' ) {
+				if( isFunction ) {
 					// Determine the "old value" based on the same logic as our getter for consistency
 					let oldValForCallback;
 					if( booleanAttrs.has(name) ) {
@@ -70,8 +75,8 @@
 					// setAttribute expects a string value
 					element.setAttribute(name, String(finalValue));
 				}
-			}
-		});
+			});
+		}
 
 		return this;
 	});
