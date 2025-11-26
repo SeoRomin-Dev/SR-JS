@@ -1648,12 +1648,12 @@ const $ = (function() {
 			return attrValue === null ? undefined : attrValue;
 		}
 
-		// Setter
-		this.each(function( index ) {
-			const element = this;
+		// --- SETTER ---
 
-			// .attr({ 'attr1': 'val1', ... })
-			if( typeof name === 'object' ) {
+		// Case 1: .attr({ 'attr1': 'val1', ... })
+		if( typeof name === 'object' ) {
+			this.each(function() {
+				const element = this;
 				for( const key in name ) {
 					if( Object.hasOwn(name, key) ) {
 						const val = name[key];
@@ -1665,12 +1665,17 @@ const $ = (function() {
 						}
 					}
 				}
-			}
-			// .attr('attrName', 'value' | function)
-			else if( typeof name === 'string' ) {
+			});
+		}
+		// Case 2: .attr('attrName', 'value' | function)
+		else if( typeof name === 'string' ) {
+			const isFunction = typeof value === 'function';
+
+			this.each(function( index ) {
+				const element = this;
 				let finalValue = value;
 
-				if( typeof value === 'function' ) {
+				if( isFunction ) {
 					// Determine the "old value" based on the same logic as our getter for consistency
 					let oldValForCallback;
 					if( booleanAttrs.has(name) ) {
@@ -1688,8 +1693,8 @@ const $ = (function() {
 					// setAttribute expects a string value
 					element.setAttribute(name, String(finalValue));
 				}
-			}
-		});
+			});
+		}
 
 		return this;
 	});
@@ -2429,6 +2434,8 @@ const $ = (function() {
 		}
 
 		// Setter: .html( newContent | function )
+		const isFunction = typeof content === 'function';
+
 		this.each(function( index ) {
 			// Safe check: Ensure valid Element node before accessing innerHTML
 			if( !this || this.nodeType !== 1 ) return;
@@ -2437,7 +2444,7 @@ const $ = (function() {
 			// `cleanRoot` is false to preserve the parent's data/events
 			$._internal.cleanupNodeTree(this, false);
 
-			const newContent = typeof content === 'function'
+			const newContent = isFunction
 				? content.call(this, index, this.innerHTML)
 				: content;
 
@@ -2847,12 +2854,12 @@ const $ = (function() {
 			return firstEl ? firstEl[propName] : undefined;
 		}
 
-		// Setter
-		this.each(function( index ) {
-			const element = this;
+		// --- SETTER ---
 
-			// .prop({ 'prop1': 'val1', ... })
-			if( typeof name === 'object' ) {
+		// Case 1: .prop({ 'prop1': 'val1', ... })
+		if( typeof name === 'object' ) {
+			this.each(function() {
+				const element = this;
 				for( const key in name ) {
 					if( Object.hasOwn(name, key) ) {
 						const propName = key.trim();
@@ -2861,21 +2868,23 @@ const $ = (function() {
 						}
 					}
 				}
-			}
-			// .prop('propName', 'value' | function)
-			else if( typeof name === 'string' ) {
-				const propName = name.trim();
-				if( !propName ) return; // continue .each loop
+			});
+		}
+		// Case 2: .prop('propName', 'value' | function)
+		else if( typeof name === 'string' ) {
+			const propName = name.trim();
+			if( !propName ) return this;
 
-				let finalValue = value;
-
-				if( typeof value === 'function' ) {
-					finalValue = value.call(element, index, element[propName]);
-				}
+			const isFunction = typeof value === 'function';
+			this.each(function( index ) {
+				const element = this;
+				const finalValue = isFunction
+					? value.call(element, index, element[propName])
+					: value;
 
 				element[propName] = finalValue;
-			}
-		});
+			});
+		}
 
 		return this;
 	});
@@ -3203,12 +3212,14 @@ const $ = (function() {
 		}
 
 		// Setter: .text( value | function )
+		const isFunction = typeof content === 'function';
+
 		this.each(function( index ) {
 			const el = this;
 			// Safe check: Ensure valid node before attempting to write
 			if( !el || !el.nodeType ) return;
 
-			const newContent = typeof content === 'function'
+			const newContent = isFunction
 				? content.call(el, index, el.textContent)
 				: content;
 
