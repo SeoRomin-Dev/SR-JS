@@ -36,6 +36,10 @@ Include the minified script in your HTML file before your custom scripts.
 <script src="sr.min.js"></script>
 ```
 
+### Or get it:
+
+[Download SR JS](https://github.com/SeoRomin-Dev/SR-JS/tree/main/dist/sr.min.js)
+
 ## Some examples
 
 ### Basic GET Request
