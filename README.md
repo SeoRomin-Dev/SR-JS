@@ -135,6 +135,20 @@ $.method('sum', function(a, b) {
 console.log($.sum(10, 20)); // 30
 ```
 
+## When to use
+
+- You need a stable and predictable library.
+- You repeatedly write the same boilerplate code.
+- You need to increase your development speed.
+- You don’t want to constantly rewrite your own helper functions.
+- You need the ability to extend the library with plugins or custom methods.
+- You need fast, optimized, and modern code.
+- You want to reduce the final bundle size (depending on the project).
+- You want a consistent API that keeps your codebase clean and easy to maintain.
+- You need a solution that behaves consistently across all modern browsers.
+- You want a library that helps prevent common bugs by providing well-tested utilities.
+- You want something lightweight but powerful enough to cover most daily tasks.
+
 ## Browser Support
 
 This library relies on modern JavaScript features including `Proxy`, `WeakMap`, and `structuredClone`. Below is the minimum browser support matrix.
