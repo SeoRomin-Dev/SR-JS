@@ -211,7 +211,7 @@ const $ = (function() {
 		});
 	};
 
-	// Securely adds a new static method for developers
+	// Flexibly adds a new static method for developers
 	SR.method = function( name, func ) {
 		if( typeof name !== 'string' || !name.trim() ) {
 			console.error('SR Method: Static method name must be a non-empty string.');
@@ -223,17 +223,22 @@ const $ = (function() {
 			return;
 		}
 
-		if( SR.hasOwnProperty(name) ) {
-			console.warn(`SR Method: A static method named "${name}" already exists. It will not be replaced.`);
-			return;
+		const descriptor = Object.getOwnPropertyDescriptor(SR, name);
+		if( descriptor ) {
+			if( !descriptor.configurable ) {
+				console.error(`SR Method: Cannot overwrite non-configurable static method "${name}".`);
+				return;
+			}
+
+			console.warn(`SR Method: A static method named "${name}" already exists. It will be overwritten.`);
 		}
 
-		// Add the new method to the static SR/$ object
+		// Add/overwrite the method on the static SR/$ object, making it extensible
 		Object.defineProperty(SR, name, {
 			value: func,
 			enumerable: true,
-			writable: false,
-			configurable: false
+			writable: true,
+			configurable: true
 		});
 	};
 
