@@ -17,7 +17,7 @@
 			if( this.children ) {
 				// Iterate directly over the live HTMLCollection for efficiency
 				for( const child of this.children ) {
-					if( !selector || child.matches(selector) ) {
+					if( !selector || $._internal.matches(child, selector) ) {
 						childrenElements.add(child);
 					}
 				}

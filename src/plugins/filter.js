@@ -25,22 +25,9 @@
 				return $();
 			}
 
-			let errorLogged = false;
 			result = elements.filter(el => {
-				// .matches() is only available on Element nodes (nodeType 1)
-				if( el.nodeType !== 1 ) {
-					return false;
-				}
-				try {
-					return el.matches(selector);
-				} catch( e ) {
-					// Log invalid selector error only once to avoid console spam
-					if( !errorLogged ) {
-						console.error(`SR: Invalid selector for .filter(): "${selector}"`);
-						errorLogged = true;
-					}
-					return false;
-				}
+				// Use the safe internal helper which handles nodeType checks and invalid selectors
+				return $._internal.matches(el, selector);
 			});
 		}
 		// Case 3: SR Instance

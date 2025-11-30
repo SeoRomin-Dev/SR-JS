@@ -49,23 +49,12 @@
 				return '';
 			}).trim();
 
-			let errorLogged = false;
-
 			return this['_sr_elements'].some(el => {
 				// Check against the standard CSS part first for performance
 				if( baseSelector ) {
-					try {
-						// .matches() is only available on Element nodes
-						if( el.nodeType !== 1 || !el.matches(baseSelector) ) {
-							return false;
-						}
-					} catch( e ) {
-						// Log invalid selector error only once to avoid console spam
-						if( !errorLogged ) {
-							console.error(`SR: Invalid selector for .is(): "${baseSelector}"`);
-							errorLogged = true;
-						}
-						return false; // An invalid selector cannot match
+					// Use the safe internal helper, which handles nodeType and invalid selectors
+					if( !$._internal.matches(el, baseSelector) ) {
+						return false;
 					}
 				}
 

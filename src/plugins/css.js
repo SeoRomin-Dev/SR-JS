@@ -32,6 +32,23 @@
 		return strValue; // Always return the trimmed string
 	};
 
+	// Helper to set or remove a single style property on a given element
+	const setStyle = ( element, key, val ) => {
+		const finalVal = normalizeValue(key, val);
+
+		// If final value is null or undefined, remove the property
+		if( finalVal === null || finalVal === undefined ) {
+			const propToRemove = key.startsWith('--') ? key : $._internal.camelToKebab(key);
+			element.style.removeProperty(propToRemove);
+		} else {
+			if( key.startsWith('--') ) {
+				element.style.setProperty(key, finalVal);
+			} else {
+				element.style[$._internal.camelCase(key)] = finalVal;
+			}
+		}
+	};
+
 	$.extend('css', function( prop, value ) {
 		// --- GETTER ---
 		// .css('property-name')
@@ -49,34 +66,15 @@
 
 		// --- SETTER ---
 		this.each(function() {
-			const element = this;
-
-			// Helper to set or remove a single style property
-			const setStyle = ( key, val ) => {
-				const finalVal = normalizeValue(key, val);
-
-				// If final value is null or undefined, remove the property
-				if( finalVal === null || finalVal === undefined ) {
-					const propToRemove = key.startsWith('--') ? key : $._internal.camelToKebab(key);
-					element.style.removeProperty(propToRemove);
-				} else {
-					if( key.startsWith('--') ) {
-						element.style.setProperty(key, finalVal);
-					} else {
-						element.style[$._internal.camelCase(key)] = finalVal;
-					}
-				}
-			};
-
 			// .css({ 'prop': 'value', ... })
 			if( typeof prop === 'object' ) {
 				for( const [key, val] of Object.entries(prop) ) {
-					setStyle(key, val);
+					setStyle(this, key, val);
 				}
 			}
 			// .css('prop', 'value')
 			else if( typeof prop === 'string' ) {
-				setStyle(prop, value);
+				setStyle(this, prop, value);
 			}
 		});
 

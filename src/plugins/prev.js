@@ -15,7 +15,7 @@
 			// Check if the previous sibling exists
 			if( prevEl ) {
 				// If no selector is provided, or if the sibling matches the selector, add it
-				if( !selector || (typeof selector === 'string' && prevEl.matches(selector)) ) {
+				if( !selector || $._internal.matches(prevEl, selector) ) {
 					prevSiblings.add(prevEl);
 				}
 			}

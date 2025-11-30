@@ -15,7 +15,7 @@
 			// Check if the next sibling exists
 			if( nextEl ) {
 				// If no selector is provided, or if the sibling matches the selector, add it
-				if( !selector || (typeof selector === 'string' && nextEl.matches(selector)) ) {
+				if( !selector || $._internal.matches(nextEl, selector) ) {
 					nextSiblings.add(nextEl);
 				}
 			}

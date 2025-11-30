@@ -11,7 +11,7 @@
 		this.each(function() {
 			const parent = this.parentElement;
 			if( parent ) {
-				if( !selector || (selector && parent.matches(selector)) ) {
+				if( !selector || $._internal.matches(parent, selector) ) {
 					parents.add(parent);
 				}
 			}

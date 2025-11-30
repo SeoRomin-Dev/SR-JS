@@ -252,8 +252,39 @@
 			const { handler, selector } = storedEvent;
 
 			if( selector ) { // Delegated event
-				const matchingTarget = event.target.closest(selector);
-				if( matchingTarget && container.contains(matchingTarget) ) {
+				let matchingTarget = null;
+
+				// Use a specialized path for selectors starting with a combinator (>, +, ~) or :scope,
+				// as they are not supported by .closest() but are valid for .querySelectorAll() from a context
+				if( /^\s*(:scope|[>+~])/.test(selector) ) {
+					// Slow path: Find all potential targets relative to the container
+					const potentialTargets = new Set(container.querySelectorAll(selector));
+					if( potentialTargets.size > 0 ) {
+						let current = event.target;
+						// Traverse from the event target up to the container
+						while( current && current !== container.parentElement ) {
+							if( potentialTargets.has(current) ) {
+								matchingTarget = current;
+								break;
+							}
+							if( current === container ) break; // Stop if we reach the container
+							current = current.parentElement;
+						}
+					}
+				} else {
+					// Fast path: Use .closest() for standard selectors
+					try {
+						const closest = event.target.closest(selector);
+						if( closest && container.contains(closest) ) {
+							matchingTarget = closest;
+						}
+					} catch( e ) {
+						// This will catch truly invalid selectors that our regex missed
+						// Silently fail, as matchingTarget will remain null
+					}
+				}
+
+				if( matchingTarget ) {
 					handler.call(matchingTarget, event);
 					if( storedEvent.once ) {
 						$._internal.removeEvent(container, storedEvent.originalType, storedEvent.selector, storedEvent.handler);
@@ -432,6 +463,18 @@
 		'zoom',
 		'strokeOpacity'
 	]);
+
+	// A safe .matches() wrapper that won't throw on invalid selectors
+	$._internal.matches = ( el, selector ) => {
+		if( !el || el.nodeType !== 1 || !selector || typeof selector !== 'string' ) {
+			return false;
+		}
+		try {
+			return el.matches(selector);
+		} catch( e ) {
+			return false;
+		}
+	};
 
 	// --- Animation Helpers ---
 
