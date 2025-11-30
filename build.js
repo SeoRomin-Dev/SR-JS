@@ -94,7 +94,7 @@ async function build() {
 		const minOutputPath = path.join(distPath, 'sr.min.js');
 		fs.writeFileSync(minOutputPath, minifiedResult.code, 'utf8');
 		console.log(`✅ Minified build saved to ${path.relative(rootDir, minOutputPath)}`);
-		console.log('\n🎉 Build process completed successfully!');
+		console.log(`\n🎉 Build process completed successfully! Version: v${version}`);
 
 	} catch( error ) {
 		console.error('\nBuild failed:');
