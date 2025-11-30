@@ -499,8 +499,39 @@ const $ = (function() {
 			const { handler, selector } = storedEvent;
 
 			if( selector ) { // Delegated event
-				const matchingTarget = event.target.closest(selector);
-				if( matchingTarget && container.contains(matchingTarget) ) {
+				let matchingTarget = null;
+
+				// Use a specialized path for selectors starting with a combinator (>, +, ~) or :scope,
+				// as they are not supported by .closest() but are valid for .querySelectorAll() from a context
+				if( /^\s*(:scope|[>+~])/.test(selector) ) {
+					// Slow path: Find all potential targets relative to the container
+					const potentialTargets = new Set(container.querySelectorAll(selector));
+					if( potentialTargets.size > 0 ) {
+						let current = event.target;
+						// Traverse from the event target up to the container
+						while( current && current !== container.parentElement ) {
+							if( potentialTargets.has(current) ) {
+								matchingTarget = current;
+								break;
+							}
+							if( current === container ) break; // Stop if we reach the container
+							current = current.parentElement;
+						}
+					}
+				} else {
+					// Fast path: Use .closest() for standard selectors
+					try {
+						const closest = event.target.closest(selector);
+						if( closest && container.contains(closest) ) {
+							matchingTarget = closest;
+						}
+					} catch( e ) {
+						// This will catch truly invalid selectors that our regex missed
+						// Silently fail, as matchingTarget will remain null
+					}
+				}
+
+				if( matchingTarget ) {
 					handler.call(matchingTarget, event);
 					if( storedEvent.once ) {
 						$._internal.removeEvent(container, storedEvent.originalType, storedEvent.selector, storedEvent.handler);
@@ -679,6 +710,18 @@ const $ = (function() {
 		'zoom',
 		'strokeOpacity'
 	]);
+
+	// A safe .matches() wrapper that won't throw on invalid selectors
+	$._internal.matches = ( el, selector ) => {
+		if( !el || el.nodeType !== 1 || !selector || typeof selector !== 'string' ) {
+			return false;
+		}
+		try {
+			return el.matches(selector);
+		} catch( e ) {
+			return false;
+		}
+	};
 
 	// --- Animation Helpers ---
 
@@ -1766,7 +1809,7 @@ const $ = (function() {
 			if( this.children ) {
 				// Iterate directly over the live HTMLCollection for efficiency
 				for( const child of this.children ) {
-					if( !selector || child.matches(selector) ) {
+					if( !selector || $._internal.matches(child, selector) ) {
 						childrenElements.add(child);
 					}
 				}
@@ -1906,6 +1949,23 @@ const $ = (function() {
 		return strValue; // Always return the trimmed string
 	};
 
+	// Helper to set or remove a single style property on a given element
+	const setStyle = ( element, key, val ) => {
+		const finalVal = normalizeValue(key, val);
+
+		// If final value is null or undefined, remove the property
+		if( finalVal === null || finalVal === undefined ) {
+			const propToRemove = key.startsWith('--') ? key : $._internal.camelToKebab(key);
+			element.style.removeProperty(propToRemove);
+		} else {
+			if( key.startsWith('--') ) {
+				element.style.setProperty(key, finalVal);
+			} else {
+				element.style[$._internal.camelCase(key)] = finalVal;
+			}
+		}
+	};
+
 	$.extend('css', function( prop, value ) {
 		// --- GETTER ---
 		// .css('property-name')
@@ -1923,34 +1983,15 @@ const $ = (function() {
 
 		// --- SETTER ---
 		this.each(function() {
-			const element = this;
-
-			// Helper to set or remove a single style property
-			const setStyle = ( key, val ) => {
-				const finalVal = normalizeValue(key, val);
-
-				// If final value is null or undefined, remove the property
-				if( finalVal === null || finalVal === undefined ) {
-					const propToRemove = key.startsWith('--') ? key : $._internal.camelToKebab(key);
-					element.style.removeProperty(propToRemove);
-				} else {
-					if( key.startsWith('--') ) {
-						element.style.setProperty(key, finalVal);
-					} else {
-						element.style[$._internal.camelCase(key)] = finalVal;
-					}
-				}
-			};
-
 			// .css({ 'prop': 'value', ... })
 			if( typeof prop === 'object' ) {
 				for( const [key, val] of Object.entries(prop) ) {
-					setStyle(key, val);
+					setStyle(this, key, val);
 				}
 			}
 			// .css('prop', 'value')
 			else if( typeof prop === 'string' ) {
-				setStyle(prop, value);
+				setStyle(this, prop, value);
 			}
 		});
 
@@ -2173,22 +2214,9 @@ const $ = (function() {
 				return $();
 			}
 
-			let errorLogged = false;
 			result = elements.filter(el => {
-				// .matches() is only available on Element nodes (nodeType 1)
-				if( el.nodeType !== 1 ) {
-					return false;
-				}
-				try {
-					return el.matches(selector);
-				} catch( e ) {
-					// Log invalid selector error only once to avoid console spam
-					if( !errorLogged ) {
-						console.error(`SR: Invalid selector for .filter(): "${selector}"`);
-						errorLogged = true;
-					}
-					return false;
-				}
+				// Use the safe internal helper which handles nodeType checks and invalid selectors
+				return $._internal.matches(el, selector);
 			});
 		}
 		// Case 3: SR Instance
@@ -2511,23 +2539,12 @@ const $ = (function() {
 				return '';
 			}).trim();
 
-			let errorLogged = false;
-
 			return this['_sr_elements'].some(el => {
 				// Check against the standard CSS part first for performance
 				if( baseSelector ) {
-					try {
-						// .matches() is only available on Element nodes
-						if( el.nodeType !== 1 || !el.matches(baseSelector) ) {
-							return false;
-						}
-					} catch( e ) {
-						// Log invalid selector error only once to avoid console spam
-						if( !errorLogged ) {
-							console.error(`SR: Invalid selector for .is(): "${baseSelector}"`);
-							errorLogged = true;
-						}
-						return false; // An invalid selector cannot match
+					// Use the safe internal helper, which handles nodeType and invalid selectors
+					if( !$._internal.matches(el, baseSelector) ) {
+						return false;
 					}
 				}
 
@@ -2611,7 +2628,7 @@ const $ = (function() {
 			// Check if the next sibling exists
 			if( nextEl ) {
 				// If no selector is provided, or if the sibling matches the selector, add it
-				if( !selector || (typeof selector === 'string' && nextEl.matches(selector)) ) {
+				if( !selector || $._internal.matches(nextEl, selector) ) {
 					nextSiblings.add(nextEl);
 				}
 			}
@@ -2725,7 +2742,7 @@ const $ = (function() {
 		this.each(function() {
 			const parent = this.parentElement;
 			if( parent ) {
-				if( !selector || (selector && parent.matches(selector)) ) {
+				if( !selector || $._internal.matches(parent, selector) ) {
 					parents.add(parent);
 				}
 			}
@@ -2831,7 +2848,7 @@ const $ = (function() {
 			// Check if the previous sibling exists
 			if( prevEl ) {
 				// If no selector is provided, or if the sibling matches the selector, add it
-				if( !selector || (typeof selector === 'string' && prevEl.matches(selector)) ) {
+				if( !selector || $._internal.matches(prevEl, selector) ) {
 					prevSiblings.add(prevEl);
 				}
 			}
