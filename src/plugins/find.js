@@ -13,12 +13,9 @@
 		const foundElements = new Set();
 
 		this.each(function() {
-			// Ensure the context element has querySelectorAll (e.g., not a window or text node)
-			if( typeof this.querySelectorAll === 'function' ) {
-				this.querySelectorAll(selector).forEach(found => {
-					foundElements.add(found);
-				});
-			}
+			// Use the safe, context-aware query helper which handles document context correctly
+			const found = $._internal.scopedQuerySelectorAll(this, selector);
+			found.forEach(el => foundElements.add(el));
 		});
 
 		return $(foundElements);

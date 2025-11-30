@@ -28,31 +28,28 @@ const $ = (function() {
 
 			// 1. Handle String Selectors (HTML or CSS)
 			if( typeof selector === 'string' ) {
-				if( $._internal.isHtmlString(selector) ) {
-					nodes = $._internal.createNodesFromHTML(selector.trim());
+				const trimmedSelector = selector.trim();
+				if( $._internal.isHtmlString(trimmedSelector) ) {
+					nodes = $._internal.createNodesFromHTML(trimmedSelector);
 				} else {
 					// CSS Selector with Context
 					if( context ) {
 						// Support SR object as context
 						if( context instanceof SR ) {
-							// Manually collect nodes from context elements to avoid dependency on .find()
 							context[_elements].forEach(ctxEl => {
-								if( ctxEl.querySelectorAll ) {
-									const found = ctxEl.querySelectorAll(selector.trim());
-									nodes.push(...found);
-								}
+								nodes.push(...$._internal.scopedQuerySelectorAll(ctxEl, trimmedSelector));
 							});
 						}
 						// Support DOM Element as context
 						else if( context.nodeType ) {
-							nodes = context.querySelectorAll(selector.trim());
+							nodes = $._internal.scopedQuerySelectorAll(context, trimmedSelector);
 						}
 						// Fallback (e.g. context is invalid or unknown type)
 						else {
-							nodes = document.querySelectorAll(selector.trim());
+							nodes = $._internal.scopedQuerySelectorAll(document, trimmedSelector);
 						}
 					} else {
-						nodes = document.querySelectorAll(selector.trim());
+						nodes = $._internal.scopedQuerySelectorAll(document, trimmedSelector);
 					}
 				}
 			}

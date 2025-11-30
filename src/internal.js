@@ -144,6 +144,35 @@
 		});
 	};
 
+	// Helper to check if a stored event matches the removal criteria
+	$._internal.eventMatchesCriteria = ( event, type, namespaces, selector, handler ) => {
+		// 1. Check type (if specified)
+		if( type && event.type !== type ) {
+			return false;
+		}
+
+		// 2. Check namespaces (if specified)
+		if( namespaces.length > 0 ) {
+			const eventNamespaces = event.namespace ? event.namespace.split('.') : [];
+			// The stored event must contain ALL of the specified namespaces
+			if( !namespaces.every(ns => eventNamespaces.includes(ns)) ) {
+				return false;
+			}
+		}
+
+		// 3. Check selector (undefined = wildcard, null = direct)
+		if( selector !== undefined && event.selector !== selector ) {
+			return false;
+		}
+
+		// 4. Check handler (if specified)
+		if( handler && event.handler !== handler ) {
+			return false;
+		}
+
+		return true; // It's a match for removal
+	};
+
 	// Removes event handlers and cleans up dispatchers if no handlers remain
 	$._internal.removeEvent = function( element, eventType, selector, handler ) {
 		const events = element.__sr_events;
@@ -158,34 +187,7 @@
 
 		// Keep events that DO NOT match the removal criteria
 		const remainingEvents = events.filter(e => {
-			let isMatch = true;
-
-			// 1. Check type (if specified)
-			if( typeToRemove && e.type !== typeToRemove ) {
-				isMatch = false;
-			}
-
-			// 2. Check namespaces (if specified)
-			if( isMatch && namespacesToRemove.length > 0 ) {
-				const storedNamespaces = e.namespace ? e.namespace.split('.') : [];
-				// The stored event must contain ALL of the specified namespaces
-				if( !namespacesToRemove.every(ns => storedNamespaces.includes(ns)) ) {
-					isMatch = false;
-				}
-			}
-
-			// 3. Check selector (undefined = wildcard, null = direct)
-			if( isMatch && selector !== undefined && e.selector !== selector ) {
-				isMatch = false;
-			}
-
-			// 4. Check handler (if specified)
-			if( isMatch && handler && e.handler !== handler ) {
-				isMatch = false;
-			}
-
-			// Return true to KEEP the element if it's NOT a match for removal
-			return !isMatch;
+			return !$._internal.eventMatchesCriteria(e, typeToRemove, namespacesToRemove, selector, handler);
 		});
 
 		element.__sr_events = remainingEvents;
@@ -215,35 +217,53 @@
 		});
 	};
 
+	// Helper for delegated events to find the target for complex selectors (>, +, ~)
+	$._internal.findDelegatedTarget = ( event, container, selector ) => {
+		const potentialTargets = new Set($._internal.scopedQuerySelectorAll(container, selector));
+		if( potentialTargets.size === 0 ) return null;
+
+		let current = event.target;
+		// Traverse from the event target up to the container
+		while( current && current !== container.parentElement ) {
+			if( potentialTargets.has(current) ) {
+				return current; // Found a match
+			}
+			if( current === container ) break; // Stop if we reach the container itself
+			current = current.parentElement;
+		}
+		return null; // No match found in the ancestry chain
+	};
+
+	// Helper to determine if a handler should run for a given event, checking namespaces
+	$._internal.shouldHandlerRunForEvent = ( handler, event ) => {
+		// 1. Must match the event type (e.g., 'click')
+		if( handler.type !== event.type ) {
+			return false;
+		}
+
+		// 2. If event was triggered with namespaces, handler must match
+		const triggeredNamespaces = event.isTrigger ? (event.detail?._sr_namespaces || []) : null;
+		if( triggeredNamespaces ) {
+			const handlerNamespaces = handler.namespace ? handler.namespace.split('.') : [];
+			// A handler with no namespace will run for any namespaced trigger of the same type
+			if( handlerNamespaces.length === 0 ) {
+				return true;
+			}
+			// A handler with namespaces will only run if all its namespaces are present in the trigger
+			return handlerNamespaces.every(ns => triggeredNamespaces.includes(ns));
+		}
+
+		// 3. For organic events or triggers without namespaces, run all handlers for the type
+		return true;
+	};
+
 	// Centralized event handler for direct and delegated events
 	$._internal.eventDispatcher = function( event ) {
 		const container = this; // The element the listener is attached to
 		const allHandlers = container.__sr_events || [];
 		if( !allHandlers.length ) return;
 
-		// Check if the event was triggered by our .trigger() and has namespaces
-		const triggeredNamespaces = event.isTrigger ? (event.detail?._sr_namespaces || []) : null;
-
-		const handlersToRun = allHandlers.filter(h => {
-			// 1. Must match the event type (e.g., 'click')
-			if( h.type !== event.type ) {
-				return false;
-			}
-
-			// 2. If triggered with namespaces, handler must match
-			if( triggeredNamespaces ) {
-				const handlerNamespaces = h.namespace ? h.namespace.split('.') : [];
-				// A handler with no namespace will run for any namespaced trigger of the same type
-				if( handlerNamespaces.length === 0 ) {
-					return true;
-				}
-				// A handler with namespaces will only run if all its namespaces are present in the trigger
-				return handlerNamespaces.every(ns => triggeredNamespaces.includes(ns));
-			}
-
-			// 3. For organic events or triggers without namespaces, run all handlers for the type
-			return true;
-		});
+		const handlersToRun = allHandlers.filter(h => $._internal.shouldHandlerRunForEvent(h, event));
 
 		if( !handlersToRun.length ) return;
 
@@ -254,23 +274,9 @@
 			if( selector ) { // Delegated event
 				let matchingTarget = null;
 
-				// Use a specialized path for selectors starting with a combinator (>, +, ~) or :scope,
-				// as they are not supported by .closest() but are valid for .querySelectorAll() from a context
+				// Use a specialized path for selectors starting with a combinator (>, +, ~) or :scope
 				if( /^\s*(:scope|[>+~])/.test(selector) ) {
-					// Slow path: Find all potential targets relative to the container
-					const potentialTargets = new Set(container.querySelectorAll(selector));
-					if( potentialTargets.size > 0 ) {
-						let current = event.target;
-						// Traverse from the event target up to the container
-						while( current && current !== container.parentElement ) {
-							if( potentialTargets.has(current) ) {
-								matchingTarget = current;
-								break;
-							}
-							if( current === container ) break; // Stop if we reach the container
-							current = current.parentElement;
-						}
-					}
+					matchingTarget = $._internal.findDelegatedTarget(event, container, selector);
 				} else {
 					// Fast path: Use .closest() for standard selectors
 					try {
@@ -279,7 +285,6 @@
 							matchingTarget = closest;
 						}
 					} catch( e ) {
-						// This will catch truly invalid selectors that our regex missed
 						// Silently fail, as matchingTarget will remain null
 					}
 				}
@@ -300,7 +305,6 @@
 	};
 
 	// Recursively cleans up SR data and events from a node and its descendants
-	// This is crucial for preventing memory leaks when removing elements from the DOM
 	$._internal.cleanupNodeTree = function( rootNode, cleanRoot = true ) {
 		if( !rootNode || rootNode.nodeType !== 1 ) return; // Guard against non-elements
 
@@ -332,7 +336,7 @@
 	$._internal.cloneNode = function( originalEl, withDataAndEvents, deepWithDataAndEvents ) {
 		const clonedEl = originalEl.cloneNode(true);
 
-		const copyProps = (source, dest) => {
+		const copyProps = ( source, dest ) => {
 			// Copy SR event handlers
 			if( source.__sr_events ) {
 				source.__sr_events.forEach(event => {
@@ -393,20 +397,14 @@
 	};
 
 	// Helper to resolve the display value for an element being shown
-	// Tries to recover the original display (e.g. flex, grid) before defaulting
 	$._internal.resolveDisplayValue = (el) => {
 		// 1. Check cache for a *defined* and non-null previous value
 		const data = $._internal.dataCache.get(el);
-		// _srOldDisplay can be: a string (e.g. 'block'), null (for SVG), or undefined (for disconnected HTML)
 		const storedDisplay = (data && Object.hasOwn(data, '_srOldDisplay')) ? data['_srOldDisplay'] : undefined;
 
-		// A specifically stored string value takes highest priority
 		if( typeof storedDisplay === 'string' ) {
 			return storedDisplay;
 		}
-
-		// If storedDisplay is undefined, it means el was hidden while disconnected
-		// We must calculate the display value now. The rest of the function handles this
 
 		// 2. Try to reveal natural display by clearing inline 'none'
 		if( el.style.display === 'none' ) {
@@ -426,18 +424,13 @@
 
 	// Helper to remove an attribute, correctly handling SVG namespaces
 	$._internal.removeAttribute = function( el, name ) {
-		// For SVG, check for namespaces (e.g., 'xlink:href')
-		// getAttributeNode is the most reliable way to handle this
 		if( el instanceof SVGElement ) {
 			const attrNode = el.getAttributeNode(name);
-			// If a namespace is found, use the NS-aware removal method
 			if( attrNode && attrNode.namespaceURI ) {
 				el.removeAttributeNS(attrNode.namespaceURI, attrNode.localName);
-				return; // Done
+				return;
 			}
 		}
-
-		// For standard HTML or non-namespaced SVG attributes
 		el.removeAttribute(name);
 	};
 
@@ -464,6 +457,29 @@
 		'strokeOpacity'
 	]);
 
+	// A safe and context-aware querySelectorAll
+	$._internal.scopedQuerySelectorAll = function( element, selector ) {
+		// Use documentElement for document context, otherwise use the element itself
+		const context = (element && element.nodeType === 9) ? element.documentElement : element;
+
+		if( !context || typeof context.querySelectorAll !== 'function' ) {
+			return [];
+		}
+
+		try {
+			// Prepend ':scope' to selector parts starting with a combinator to ensure validity
+			const finalSelector = selector.split(',').map(s => {
+				const trimmed = s.trim();
+				return /^\s*[>+~]/.test(trimmed) ? `:scope ${trimmed}` : trimmed;
+			}).join(',');
+
+			return Array.from(context.querySelectorAll(finalSelector));
+		} catch( e ) {
+			// Silently fail on invalid selectors
+			return [];
+		}
+	};
+
 	// A safe .matches() wrapper that won't throw on invalid selectors
 	$._internal.matches = ( el, selector ) => {
 		if( !el || el.nodeType !== 1 || !selector || typeof selector !== 'string' ) {
@@ -482,7 +498,6 @@
 	$._internal.animationQueues = new WeakMap();
 
 	// Adds an animation to an element's queue
-	// If the queue is empty, it executes the function immediately
 	$._internal.enqueueAnimation = (el, fn) => {
 		if( !$._internal.animationQueues.has(el) ) {
 			$._internal.animationQueues.set(el, []);
