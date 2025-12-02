@@ -2,6 +2,9 @@
 
 A pure JavaScript library for DOM manipulation, events, and animations. It provides a familiar chaining syntax while utilizing modern browser APIs for maximum performance.
 
+[Docs](https://seoromin-dev.github.io/SR-JS/)
+
+
 ## Installation
 
 Include the minified script in your HTML file before your custom scripts.
@@ -161,5 +164,6 @@ This library relies on modern JavaScript features including `Proxy`, `WeakMap`, 
 | **Microsoft Edge** | 98+ | Feb 2022 |
 
 ## Author and License
+
 
 Created and maintained by Roman Orlovskiy ([SeoRomin](https://github.com/SeoRomin-Dev)) under the MIT license.
