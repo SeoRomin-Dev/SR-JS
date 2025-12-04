@@ -417,6 +417,31 @@ const $ = (function() {
 		return true; // It's a match for removal
 	};
 
+	// Helper to clean up event dispatchers after handlers are removed
+	const _cleanupDispatchers = ( element, typesToClean, remainingEvents ) => {
+		if( !element.__sr_dispatchers ) return;
+
+		typesToClean.forEach(type => {
+			if( !element.__sr_dispatchers ) return; // Re-check in case it was deleted
+			const remainingForType = remainingEvents.filter(e => e.type === type);
+
+			const hasActive = remainingForType.some(e => !e.passive);
+			const hasPassive = remainingForType.some(e => e.passive);
+
+			const activeKey = `${type}_active`;
+			if( !hasActive && element.__sr_dispatchers[activeKey] ) {
+				element.removeEventListener(type, $._internal.eventDispatcher, { passive: false });
+				delete element.__sr_dispatchers[activeKey];
+			}
+
+			const passiveKey = `${type}_passive`;
+			if( !hasPassive && element.__sr_dispatchers[passiveKey] ) {
+				element.removeEventListener(type, $._internal.eventDispatcher, { passive: true });
+				delete element.__sr_dispatchers[passiveKey];
+			}
+		});
+	};
+
 	// Removes event handlers and cleans up dispatchers if no handlers remain
 	$._internal.removeEvent = function( element, eventType, selector, handler ) {
 		const events = element.__sr_events;
@@ -437,28 +462,7 @@ const $ = (function() {
 		element.__sr_events = remainingEvents;
 
 		// Cleanup: Remove dispatchers if no corresponding handlers are left
-		typesBeforeRemoval.forEach(type => {
-			if( !element.__sr_dispatchers ) return;
-			const remainingForType = remainingEvents.filter(e => e.type === type);
-
-			// Check and remove active (non-passive) dispatcher
-			if( !remainingForType.some(e => !e.passive) ) {
-				const key = `${type}_active`;
-				if( element.__sr_dispatchers[key] ) {
-					element.removeEventListener(type, $._internal.eventDispatcher, { passive: false });
-					delete element.__sr_dispatchers[key];
-				}
-			}
-
-			// Check and remove passive dispatcher
-			if( !remainingForType.some(e => e.passive) ) {
-				const key = `${type}_passive`;
-				if( element.__sr_dispatchers[key] ) {
-					element.removeEventListener(type, $._internal.eventDispatcher, { passive: true });
-					delete element.__sr_dispatchers[key];
-				}
-			}
-		});
+		_cleanupDispatchers(element, typesBeforeRemoval, remainingEvents);
 	};
 
 	// Helper for delegated events to find the target for complex selectors (>, +, ~)
@@ -501,6 +505,14 @@ const $ = (function() {
 		return true;
 	};
 
+	// Helper to execute a handler and manage 'once' logic
+	const _executeHandler = ( container, storedEvent, event, targetElement ) => {
+		storedEvent.handler.call(targetElement, event);
+		if( storedEvent.once ) {
+			$._internal.removeEvent(container, storedEvent.originalType, storedEvent.selector, storedEvent.handler);
+		}
+	};
+
 	// Centralized event handler for direct and delegated events
 	$._internal.eventDispatcher = function( event ) {
 		const container = this; // The element the listener is attached to
@@ -508,14 +520,15 @@ const $ = (function() {
 		if( !allHandlers.length ) return;
 
 		const handlersToRun = allHandlers.filter(h => $._internal.shouldHandlerRunForEvent(h, event));
-
 		if( !handlersToRun.length ) return;
 
 		// Iterate over a copy in case a handler modifies the array
 		[...handlersToRun].forEach(storedEvent => {
-			const { handler, selector } = storedEvent;
+			const { selector } = storedEvent;
 
-			if( selector ) { // Delegated event
+			if( !selector ) { // Direct event
+				_executeHandler(container, storedEvent, event, container);
+			} else { // Delegated event
 				let matchingTarget = null;
 
 				// Use a specialized path for selectors starting with a combinator (>, +, ~) or :scope
@@ -534,15 +547,7 @@ const $ = (function() {
 				}
 
 				if( matchingTarget ) {
-					handler.call(matchingTarget, event);
-					if( storedEvent.once ) {
-						$._internal.removeEvent(container, storedEvent.originalType, storedEvent.selector, storedEvent.handler);
-					}
-				}
-			} else { // Direct event
-				handler.call(container, event);
-				if( storedEvent.once ) {
-					$._internal.removeEvent(container, storedEvent.originalType, storedEvent.selector, storedEvent.handler);
+					_executeHandler(container, storedEvent, event, matchingTarget);
 				}
 			}
 		});
@@ -701,22 +706,32 @@ const $ = (function() {
 		'strokeOpacity'
 	]);
 
-	// A safe and context-aware querySelectorAll
+	// A safe and context-aware querySelectorAll that handles document vs element contexts
 	$._internal.scopedQuerySelectorAll = function( element, selector ) {
-		// Use documentElement for document context, otherwise use the element itself
-		const context = (element && element.nodeType === 9) ? element.documentElement : element;
+		// 1. Determine the correct execution context
+		//    - If the base element is the document AND the selector starts with a combinator,
+		//      we must use document.documentElement to make it a valid query
+		//    - Otherwise, we use the element itself. This fixes issues like $('html')
+		const isDoc = element && element.nodeType === 9;
+		const hasCombinator = /^\s*[>+~]/.test(selector);
+		const context = (isDoc && hasCombinator) ? element.documentElement : element;
 
 		if( !context || typeof context.querySelectorAll !== 'function' ) {
 			return [];
 		}
 
-		try {
-			// Prepend ':scope' to selector parts starting with a combinator to ensure validity
-			const finalSelector = selector.split(',').map(s => {
-				const trimmed = s.trim();
-				return /^\s*[>+~]/.test(trimmed) ? `:scope ${trimmed}` : trimmed;
-			}).join(',');
+		// 2. Normalize the selector
+		//    - If a selector part starts with a combinator, it needs `:scope` prepended
+		//      to be valid when run on a specific element context
+		//    - This is NOT needed for document or document.documentElement
+		const needsScope = !isDoc;
+		const finalSelector = selector.split(',').map(s => {
+			const trimmed = s.trim();
+			return (needsScope && /^\s*[>+~]/.test(trimmed)) ? `:scope ${trimmed}` : trimmed;
+		}).join(',');
 
+		// 3. Execute the query within a try/catch
+		try {
 			return Array.from(context.querySelectorAll(finalSelector));
 		} catch( e ) {
 			// Silently fail on invalid selectors
