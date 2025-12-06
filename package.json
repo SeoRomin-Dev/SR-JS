@@ -2,7 +2,7 @@
 	"name": "sr-js",
 	"title": "SR JS",
 	"description": "SR JS: Pure JavaScript (JS) library for DOM manipulation, events, and animations",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"author": "Roman Orlovskiy",
 	"license": "MIT",
 	"keywords": [
