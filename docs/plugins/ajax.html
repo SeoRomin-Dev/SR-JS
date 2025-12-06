@@ -62,8 +62,8 @@ formData.append('file', fileInput.files[0]);
 $.ajax({
      url: '/upload',
      method: 'POST',
-     processData: false, 
-     contentType: false, 
+     processData: false,
+     contentType: false,
      data: formData
 })
 .then(res => console.log('Uploaded'))
@@ -95,7 +95,7 @@ $.ajax({
                     <tr>
                          <td><strong>data</strong></td>
                          <td>object | string | FormData</td>
-                         <td>Data to send. Converted to query string for GET, or body for POST.</td>
+                         <td>Data to send. Converted to query string for GET, or body for POST. Supports nested objects and arrays.</td>
                     </tr>
                     <tr>
                          <td><strong>dataType</strong></td>
@@ -128,9 +128,14 @@ $.ajax({
                          <td>Request timeout in milliseconds. Default: 0 (no timeout).</td>
                     </tr>
                     <tr>
+                         <td><strong>crossDomain</strong></td>
+                         <td>boolean</td>
+                         <td>If <code>true</code>, forces cross-domain request behavior (e.g., no X-Requested-With). If undefined, it is auto-detected.</td>
+                    </tr>
+                    <tr>
                          <td><strong>xhrFields</strong></td>
                          <td>object</td>
-                         <td>Options for the underlying request, e.g., <code>{ withCredentials: true }</code>.</td>
+                         <td>Options for the underlying request. Cookies are sent by default for same-origin requests. Use <code>{ withCredentials: true }</code> for cross-origin.</td>
                     </tr>
                </tbody>
           </table>
@@ -140,6 +145,6 @@ $.ajax({
                &copy; by SeoRomin. All rights reserved.
           </div>
      </div>
-     
+
 </body>
 </html>
