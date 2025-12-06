@@ -5,7 +5,7 @@
 */
 (function() {
 
-	// --- Custom Error Classes for Better Diagnostics ---
+	// --- Custom Error Classes ---
 
 	class HttpError extends Error {
 		constructor( response, responseText ) {
@@ -48,60 +48,42 @@
 
 	// --- Helper Functions ---
 
-	// Checks if a value is a "plain" object (created via {} or new Object())
-	const isPlainObject = ( obj ) => {
-		if( obj === null || typeof obj !== 'object' ) return false;
-		const proto = Object.getPrototypeOf(obj);
-		return proto === Object.prototype || proto === null;
-	};
-
-	// A simplified, robust query string serializer
-	// - Accepts only plain objects or arrays
-	// - Serializes arrays as `key=value1&key=value2`
-	// - Throws errors for nested objects/arrays to enforce simplicity
+	// A recursive query string serializer
+	// Supports nested objects (key[subkey]=value) and arrays (key[]=value)
 	const toQueryString = ( data ) => {
-		if( !isPlainObject(data) && !Array.isArray(data) ) {
-			throw new TypeError('SR: Data for toQueryString must be a plain object or an array.');
-		}
-
 		const parts = [];
-		// Object.entries works for both plain objects and arrays, producing [key, value] pairs
-		const source = Object.entries(data);
 
-		for( const [key, value] of source ) {
-			if( value === undefined || typeof value === 'function' ) {
-				continue;
+		const build = ( prefix, obj ) => {
+			if( prefix && (obj instanceof File || obj instanceof Blob) ) {
+				throw new TypeError('SR: Cannot serialize File/Blob - use FormData with processData: false');
 			}
 
-			if( value instanceof File || value instanceof Blob ) {
-				throw new TypeError('SR: Cannot serialize File/Blob — use FormData with processData: false');
-			}
-
-			const prefix = encodeURIComponent(key);
-
-			if( value === null ) {
-				parts.push(`${prefix}=`);
-			}
-			else if( Array.isArray(value) ) {
-				for( const item of value ) {
-					if( typeof item === 'boolean' ) {
-						throw new TypeError('SR: Boolean values in arrays are not supported — convert manually');
+			if( Array.isArray(obj) ) {
+				// Serialize array items
+				obj.forEach(( v, i ) => {
+					// Style: brackets [] for simple arrays, [index] for complex (objects)
+					const isComplex = typeof v === 'object' && v !== null;
+					build(isComplex ? `${prefix}[${i}]` : `${prefix}[]`, v);
+				});
+			} else if( obj !== null && typeof obj === 'object' ) {
+				// Serialize object keys
+				for( const name in obj ) {
+					if( Object.hasOwn(obj, name) ) {
+						build(prefix ? `${prefix}[${name}]` : name, obj[name]);
 					}
-					if( item === null || item === undefined || typeof item === 'object' ) {
-						throw new TypeError('SR: Nested arrays/objects are not supported in toQueryString');
-					}
-					parts.push(`${prefix}=${encodeURIComponent(item)}`);
+				}
+			} else {
+				// Primitive value
+				const val = typeof obj === 'function' ? obj() : obj;
+				if( val !== undefined ) {
+					parts.push(`${encodeURIComponent(prefix)}=${encodeURIComponent(val === null ? '' : val)}`);
 				}
 			}
-			else if( isPlainObject(value) ) {
-				throw new TypeError('SR: Nested objects are not supported in toQueryString');
-			}
-			else {
-				parts.push(`${prefix}=${encodeURIComponent(value)}`);
-			}
-		}
+		};
 
-		return parts.join('&');
+		build('', data);
+		// Replace spaces with '+' for standard application/x-www-form-urlencoded encoding
+		return parts.join('&').replace(/%20/g, '+');
 	};
 
 	// --- Main AJAX Function ---
@@ -118,6 +100,7 @@
 			processData = true,
 			cache = true,
 			timeout = 0,
+			crossDomain = undefined, // Undefined allows auto-detection
 			xhrFields = {}
 		} = options;
 
@@ -139,7 +122,38 @@
 		let reqBody = undefined;
 		let reqUrl = url;
 
-		// 2. Header Finalization
+		// 2. Cache Configuration
+		if( isGetOrHead && !cache ) {
+			const [baseUrl, hash] = reqUrl.split('#');
+			const urlParts = baseUrl.split('?');
+			const path = urlParts[0];
+			const existingParams = new URLSearchParams(urlParts[1] || '');
+			existingParams.set('_', Date.now());
+			reqUrl = `${path}?${existingParams.toString()}`;
+			if( hash !== undefined ) {
+				reqUrl += `#${hash}`;
+			}
+		}
+
+		// 3. Header Finalization
+
+		// Auto-detect crossDomain if not explicitly provided
+		const isCrossDomain = crossDomain !== undefined ? !!crossDomain : (() => {
+			try {
+				// Resolve the request URL against the current window location
+				const requestOrigin = new URL(reqUrl, window.location.href).origin;
+				return requestOrigin !== window.location.origin;
+			} catch( e ) {
+				return true; // Fail safe: treat invalid URLs as cross-domain
+			}
+		})();
+
+		// Add X-Requested-With header for same-origin requests
+		// This is crucial for servers to detect AJAX requests
+		if( !isCrossDomain && !reqHeaders.has('X-Requested-With') ) {
+			reqHeaders.set('X-Requested-With', 'XMLHttpRequest');
+		}
+
 		if( typeof contentType === 'string' && !isGetOrHead && !reqHeaders.has('Content-Type') ) {
 			// Set the default Content-Type unless processData is false and data is a raw string
 			if( processData || typeof data !== 'string' ) {
@@ -151,7 +165,7 @@
 			reqHeaders.delete('Content-Type');
 		}
 
-		// 3. Data and Body Preparation
+		// 4. Data and Body Preparation
 		if( data !== null && data !== undefined ) {
 			if( processData && data instanceof URLSearchParams ) {
 				throw new TypeError('SR: Use data.toString() for URLSearchParams');
@@ -178,19 +192,6 @@
 			}
 		}
 
-		// 4. Cache and Other Header Configuration
-		if( isGetOrHead && !cache ) {
-			const [baseUrl, hash] = reqUrl.split('#');
-			const urlParts = baseUrl.split('?');
-			const path = urlParts[0];
-			const existingParams = new URLSearchParams(urlParts[1] || '');
-			existingParams.set('_', Date.now());
-			reqUrl = `${path}?${existingParams.toString()}`;
-			if( hash !== undefined ) {
-				reqUrl += `#${hash}`;
-			}
-		}
-
 		// Set Accept header based on dataType if not explicitly provided
 		if( !reqHeaders.has('Accept') ) {
 			switch( finalDataType ) {
@@ -212,17 +213,13 @@
 			}
 		}
 
-		let credentials;
-		switch( xhrFields.withCredentials ) {
-			case true:
-			case 'include':
-				credentials = 'include';
-			break;
-			case 'same-origin':
-				credentials = 'same-origin';
-			break;
-			default:
-				credentials = 'omit';
+		// Determine credentials policy
+		// Default to 'same-origin' to behave like standard XHR (sending cookies for same domain)
+		let credentials = 'same-origin';
+		if( xhrFields.withCredentials === true ) {
+			credentials = 'include';
+		} else if( xhrFields.withCredentials === false ) {
+			credentials = 'omit';
 		}
 
 		// 5. Execute Request with Timeout
@@ -248,10 +245,7 @@
 				if( !text.trim() ) {
 					return null; // An empty body is valid and parses to null
 				}
-				const contentTypeHeader = res.headers.get('Content-Type') || '';
-				if( !contentTypeHeader.includes('json') ) {
-					throw new ParserError(`Expected JSON but received Content-Type: '${contentTypeHeader}'`, text, null);
-				}
+				// We attempt to parse any response as JSON if requested, regardless of headers
 				try {
 					return JSON.parse(text);
 				} catch( e ) {

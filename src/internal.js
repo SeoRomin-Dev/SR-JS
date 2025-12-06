@@ -382,7 +382,7 @@
 	// Cache for default display values by tag name
 	$._internal.defaultDisplayMap = {};
 
-	// Helper to determine the default 'display' for an element's tag
+	// Helper to determine the default display for an element's tag
 	$._internal.getDefaultDisplay = (el) => {
 		const tagName = el.tagName;
 		if( $._internal.defaultDisplayMap[tagName] ) {
@@ -462,6 +462,9 @@
 		'strokeOpacity'
 	]);
 
+	// Regular expression to detect selectors starting with a combinator
+	const reCombinator = /^\s*[>+~]/;
+
 	// A safe and context-aware querySelectorAll that handles document vs element contexts
 	$._internal.scopedQuerySelectorAll = function( element, selector ) {
 		// 1. Determine the correct execution context
@@ -469,7 +472,7 @@
 		//      we must use document.documentElement to make it a valid query
 		//    - Otherwise, we use the element itself. This fixes issues like $('html')
 		const isDoc = element && element.nodeType === 9;
-		const hasCombinator = /^\s*[>+~]/.test(selector);
+		const hasCombinator = reCombinator.test(selector);
 		const context = (isDoc && hasCombinator) ? element.documentElement : element;
 
 		if( !context || typeof context.querySelectorAll !== 'function' ) {
@@ -479,11 +482,11 @@
 		// 2. Normalize the selector
 		//    - If a selector part starts with a combinator, it needs `:scope` prepended
 		//      to be valid when run on a specific element context
-		//    - This is NOT needed for document or document.documentElement
-		const needsScope = !isDoc;
+		//    - This is NOT needed for document (nodeType 9), but IS needed for element (nodeType 1)
+		const needsScope = context.nodeType !== 9;
 		const finalSelector = selector.split(',').map(s => {
 			const trimmed = s.trim();
-			return (needsScope && /^\s*[>+~]/.test(trimmed)) ? `:scope ${trimmed}` : trimmed;
+			return (needsScope && reCombinator.test(trimmed)) ? `:scope ${trimmed}` : trimmed;
 		}).join(',');
 
 		// 3. Execute the query within a try/catch

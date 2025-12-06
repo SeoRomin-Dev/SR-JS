@@ -46,22 +46,20 @@
 
 		clearTimeout(state.timer);
 		element.removeEventListener('transitionend', state.onEnd);
-		element.style.transition = 'none'; // Prevent flickering on cleanup
 
-		// Restore original will-change and transition properties in the next frame
-		requestAnimationFrame(() => {
-			if( state.originalWillChange ) {
-				element.style.willChange = state.originalWillChange;
-			} else {
-				element.style.removeProperty('will-change');
-			}
+		// Synchronously restore original properties so the next animation
+		// (if queued) reads the correct baseline state immediately.
+		if( state.originalWillChange ) {
+			element.style.willChange = state.originalWillChange;
+		} else {
+			element.style.removeProperty('will-change');
+		}
 
-			if( state.originalTransition ) {
-				element.style.transition = state.originalTransition;
-			} else {
-				element.style.removeProperty('transition');
-			}
-		});
+		if( state.originalTransition ) {
+			element.style.transition = state.originalTransition;
+		} else {
+			element.style.removeProperty('transition');
+		}
 
 		if( runCallback && typeof state.callback === 'function' ) {
 			state.callback.call(element);
