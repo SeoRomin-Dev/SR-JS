@@ -754,6 +754,56 @@ const $ = (function() {
 		}
 	};
 
+	// --- DOM Manipulation Helpers ---
+
+	// Helper to sort unique elements in document order
+	$._internal.uniqueSort = ( elements ) => {
+		return Array.from(elements).sort((a, b) => {
+			if( a === b ) return 0;
+			// Use compareDocumentPosition for a robust, cross-browser sort
+			if( a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ) {
+				return -1; // a comes before b
+			}
+			return 1; // b comes before a
+		});
+	};
+
+	// Centralized helper for inserting content (append, prepend, after, before, replaceWith, etc.)
+	// Handles content processing, stable snapshots, and cloning logic for multiple targets
+	$._internal.domManip = ( collection, content, callback ) => {
+		// Do nothing if content is null/undefined or there are no elements to modify
+		if( content == null || !collection.length ) {
+			return collection;
+		}
+
+		// Create a stable snapshot of the source nodes before any DOM manipulation
+		const sourceNodes = $(content)['_sr_elements'].slice();
+
+		if( !sourceNodes.length ) {
+			return collection;
+		}
+
+		collection.each((index, targetEl) => {
+			const isLastTarget = index === collection.length - 1;
+
+			const nodesToInsert = [];
+			// Iterate over the stable snapshot, not a live collection
+			for( const sourceNode of sourceNodes ) {
+				// For the last target, move the original newContent elements
+				// For all other targets, use a deep clone
+				const node = isLastTarget
+					? sourceNode
+					: $._internal.cloneNode(sourceNode, true, true);
+				nodesToInsert.push(node);
+			}
+
+			// Pass the target and the prepared nodes to the specific insertion callback
+			callback.call(targetEl, targetEl, nodesToInsert);
+		});
+
+		return collection;
+	};
+
 	// --- Animation Helpers ---
 
 	// Animation queue management
@@ -795,17 +845,14 @@ const $ = (function() {
 
 	$.extend('add', function( selector ) {
 		const $elementsToAdd = $(selector);
-		const combinedElements = new Set([...this['_sr_elements'], ...$elementsToAdd['_sr_elements']]);
 
-		// Sort the combined elements in document order
-		const sortedElements = Array.from(combinedElements).sort((a, b) => {
-			if( a === b ) return 0;
-			// Use compareDocumentPosition for a robust, cross-browser sort
-			if( a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ) {
-				return -1; // a comes before b
-			}
-			return 1; // b comes before a
-		});
+		// Optimize Set creation: Start with existing elements and add new ones individually
+		// This avoids creating a temporary intermediate array with spread syntax
+		const combinedElements = new Set(this['_sr_elements']);
+		$elementsToAdd['_sr_elements'].forEach(el => combinedElements.add(el));
+
+		// Use the centralized sorting helper
+		const sortedElements = $._internal.uniqueSort(combinedElements);
 
 		return $(sortedElements);
 	});
@@ -840,37 +887,9 @@ const $ = (function() {
 (function() {
 
 	$.extend('after', function( content ) {
-		// Do nothing if content is null/undefined or there are no elements to modify
-		if( content == null || !this.length ) {
-			return this;
-		}
-
-		// Create a stable snapshot of the source nodes before any DOM manipulation
-		const sourceNodes = $(content)['_sr_elements'].slice();
-
-		if( !sourceNodes.length ) {
-			return this;
-		}
-
-		this.each((index, targetEl) => {
-			const isLastTarget = index === this.length - 1;
-
-			const nodesToInsert = [];
-			// Iterate over the stable snapshot, not a live collection
-			for( const sourceNode of sourceNodes ) {
-				// For the last target, move the original newContent elements
-				// For all other targets, use a deep clone
-				const node = isLastTarget
-					? sourceNode
-					: $._internal.cloneNode(sourceNode, true, true);
-				nodesToInsert.push(node);
-			}
-
-			// Use the native DOM method to insert the nodes
-			targetEl.after(...nodesToInsert);
+		return $._internal.domManip(this, content, function(target, nodes) {
+			target.after(...nodes);
 		});
-
-		return this;
 	});
 
 })();
@@ -1518,37 +1537,9 @@ const $ = (function() {
 (function() {
 
 	$.extend('append', function( content ) {
-		// Do nothing if content is null/undefined or there are no elements to modify
-		if( content == null || !this.length ) {
-			return this;
-		}
-
-		// Create a stable snapshot of the source nodes before any DOM manipulation
-		const sourceNodes = $(content)['_sr_elements'].slice();
-
-		if( !sourceNodes.length ) {
-			return this;
-		}
-
-		this.each((index, targetEl) => {
-			const isLastTarget = index === this.length - 1;
-
-			const nodesToInsert = [];
-			// Iterate over the stable snapshot
-			for( const sourceNode of sourceNodes ) {
-				// For the last target, move the original newContent elements
-				// For all other targets, use a deep clone
-				const node = isLastTarget
-					? sourceNode
-					: $._internal.cloneNode(sourceNode, true, true);
-				nodesToInsert.push(node);
-			}
-
-			// Native .append() handles the move or insertion safely
-			targetEl.append(...nodesToInsert);
+		return $._internal.domManip(this, content, function(target, nodes) {
+			target.append(...nodes);
 		});
-
-		return this;
 	});
 
 })();
@@ -1724,15 +1715,13 @@ const $ = (function() {
 		if( typeof name === 'object' ) {
 			this.each(function() {
 				const element = this;
-				for( const key in name ) {
-					if( Object.hasOwn(name, key) ) {
-						const val = name[key];
-						if( val === null || val === undefined ) {
-							$._internal.removeAttribute(element, key);
-						} else {
-							// setAttribute expects a string value
-							element.setAttribute(key, String(val));
-						}
+				// Optimize loop using Object.entries to iterate only own properties
+				for( const [key, val] of Object.entries(name) ) {
+					if( val === null || val === undefined ) {
+						$._internal.removeAttribute(element, key);
+					} else {
+						// setAttribute expects a string value
+						element.setAttribute(key, String(val));
 					}
 				}
 			});
@@ -1754,6 +1743,7 @@ const $ = (function() {
 						const oldAttr = element.getAttribute(name);
 						oldValForCallback = oldAttr === null ? undefined : oldAttr;
 					}
+
 					finalValue = value.call(element, index, oldValForCallback);
 				}
 
@@ -1778,37 +1768,9 @@ const $ = (function() {
 (function() {
 
 	$.extend('before', function( content ) {
-		// Do nothing if content is null/undefined or there are no elements to modify
-		if( content == null || !this.length ) {
-			return this;
-		}
-
-		// Create a stable snapshot of the source nodes before any DOM manipulation
-		const sourceNodes = $(content)['_sr_elements'].slice();
-
-		if( !sourceNodes.length ) {
-			return this;
-		}
-
-		this.each((index, targetEl) => {
-			const isLastTarget = index === this.length - 1;
-
-			const nodesToInsert = [];
-			// Iterate over the stable snapshot
-			for( const sourceNode of sourceNodes ) {
-				// For the last target, move the original newContent elements
-				// For all other targets, use a deep clone
-				const node = isLastTarget
-					? sourceNode
-					: $._internal.cloneNode(sourceNode, true, true);
-				nodesToInsert.push(node);
-			}
-
-			// Use the native DOM method to insert the nodes
-			targetEl.before(...nodesToInsert);
+		return $._internal.domManip(this, content, function(target, nodes) {
+			target.before(...nodes);
 		});
-
-		return this;
 	});
 
 })();
@@ -1914,6 +1876,7 @@ const $ = (function() {
 						closestElements.add(current);
 						break; // Found the closest for this element, stop traversing up
 					}
+
 					current = current.parentElement;
 				}
 			});
@@ -1923,15 +1886,8 @@ const $ = (function() {
 			return $();
 		}
 
-		// Sort the final unique elements in document order for consistency
-		const sortedElements = Array.from(closestElements).sort((a, b) => {
-			if( a === b ) return 0;
-			// Use compareDocumentPosition for a robust, cross-browser sort
-			if( a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ) {
-				return -1; // a comes before b
-			}
-			return 1; // b comes before a
-		});
+		// Use the centralized sorting helper
+		const sortedElements = $._internal.uniqueSort(closestElements);
 
 		return $(sortedElements);
 	});
@@ -2007,6 +1963,7 @@ const $ = (function() {
 		this.each(function() {
 			// .css({ 'prop': 'value', ... })
 			if( typeof prop === 'object' ) {
+				// Optimize loop using Object.entries to iterate only own properties
 				for( const [key, val] of Object.entries(prop) ) {
 					setStyle(this, key, val);
 				}
@@ -2060,6 +2017,7 @@ const $ = (function() {
 				elementData = {}; // Create cache if it doesn't exist
 				cache.set(element, elementData);
 			}
+
 			elementData[camelKey] = parsedValue; // Prime the cache
 
 			return parsedValue;
@@ -2125,7 +2083,7 @@ const $ = (function() {
 
 			// .data({ key: val, ... })
 			if( typeof name === 'object' && name !== null ) {
-				// Use Object.entries for safe iteration over own properties
+				// Optimize loop using Object.entries to iterate only own properties
 				for( const [key, val] of Object.entries(name) ) {
 					setData(key, val);
 				}
@@ -2472,7 +2430,9 @@ const $ = (function() {
 })();
 /*
 	@ SeoRomin Library Plugin: .html()
-	@ Gets the innerHTML of the first element or sets the innerHTML of every element.
+	@ Gets the innerHTML of the first element or sets the content of every element.
+	@ If content is a string, it sets innerHTML.
+	@ If content is a DOM element/SR object, it empties the element and appends the content.
 	@ Returns the original SR object for chaining in setter mode.
 */
 (function() {
@@ -2485,22 +2445,59 @@ const $ = (function() {
 			return (firstEl && firstEl.nodeType === 1) ? firstEl.innerHTML : '';
 		}
 
-		// Setter: .html( newContent | function )
+		// Setter: .html( content | function )
 		const isFunction = typeof content === 'function';
+		const length = this.length;
+
+		// Optimization: If content is a static object (SR/Element) and we have multiple targets,
+		// we need to snapshot it to handle cloning correctly
+		let sourceNodes = null;
+		if( !isFunction && content !== null && typeof content !== 'string' && typeof content !== 'number' && typeof content !== 'boolean' ) {
+			sourceNodes = $(content)['_sr_elements'];
+		}
 
 		this.each(function( index ) {
-			// Safe check: Ensure valid Element node before accessing innerHTML
+			// Safe check: Ensure valid Element node before attempting to write
 			if( !this || this.nodeType !== 1 ) return;
 
 			// Proactively clean up data and events for all descendant elements before removing them
-			// `cleanRoot` is false to preserve the parent's data/events
 			$._internal.cleanupNodeTree(this, false);
 
-			const newContent = isFunction
+			const val = isFunction
 				? content.call(this, index, this.innerHTML)
 				: content;
 
-			this.innerHTML = newContent;
+			// Case 1: String / Number / Boolean / Null / Undefined -> treat as HTML string
+			if( val === null || val === undefined || typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean' ) {
+				const finalHtml = (val === null || val === undefined) ? '' : String(val);
+				// Optimization: Only update DOM if changed
+				if( this.innerHTML !== finalHtml ) {
+					this.innerHTML = finalHtml;
+				}
+			}
+			// Case 2: DOM Node / SR Object / Array -> treat as elements to append
+			else {
+				// Efficiently empty the element
+				this.textContent = '';
+
+				let nodesToInsert;
+				if( sourceNodes ) {
+					// Static content applied to potentially multiple elements
+					// We must clone for all but the last target to avoid moving the original nodes
+					const isLastTarget = (index === length - 1);
+					nodesToInsert = [];
+					for( const node of sourceNodes ) {
+						nodesToInsert.push(isLastTarget ? node : $._internal.cloneNode(node, true, true));
+					}
+				} else {
+					// Content from function (likely unique) or single target scenario logic fallback
+					nodesToInsert = $(val)['_sr_elements'];
+				}
+
+				if( nodesToInsert.length ) {
+					this.append(...nodesToInsert);
+				}
+			}
 		});
 
 		return this;
@@ -2779,37 +2776,9 @@ const $ = (function() {
 (function() {
 
 	$.extend('prepend', function( content ) {
-		// Do nothing if content is null/undefined or there are no elements to modify
-		if( content == null || !this.length ) {
-			return this;
-		}
-
-		// Create a stable snapshot of the source nodes before any DOM manipulation
-		const sourceNodes = $(content)['_sr_elements'].slice();
-
-		if( !sourceNodes.length ) {
-			return this;
-		}
-
-		this.each((index, targetEl) => {
-			const isLastTarget = index === this.length - 1;
-
-			const nodesToInsert = [];
-			// Iterate over the stable snapshot
-			for( const sourceNode of sourceNodes ) {
-				// For the last target, move the original newContent elements
-				// For all other targets, use a deep clone
-				const node = isLastTarget
-					? sourceNode
-					: $._internal.cloneNode(sourceNode, true, true);
-				nodesToInsert.push(node);
-			}
-
-			// Native .prepend() inserts nodes before the first child of the element
-			targetEl.prepend(...nodesToInsert);
+		return $._internal.domManip(this, content, function(target, nodes) {
+			target.prepend(...nodes);
 		});
-
-		return this;
 	});
 
 })();
@@ -2901,12 +2870,11 @@ const $ = (function() {
 		if( typeof name === 'object' ) {
 			this.each(function() {
 				const element = this;
-				for( const key in name ) {
-					if( Object.hasOwn(name, key) ) {
-						const propName = key.trim();
-						if( propName ) {
-							element[propName] = name[key];
-						}
+				// Optimize loop using Object.entries to iterate only own properties
+				for( const [key, val] of Object.entries(name) ) {
+					const propName = key.trim();
+					if( propName ) {
+						element[propName] = val;
 					}
 				}
 			});
@@ -3097,40 +3065,11 @@ const $ = (function() {
 (function() {
 
 	$.extend('replaceWith', function( newContent ) {
-		// Do nothing if content is null/undefined or there are no elements to replace
-		if( newContent == null || !this.length ) {
-			return this;
-		}
-
-		// Create a stable snapshot of the source nodes before any DOM manipulation
-		const sourceNodes = $(newContent)['_sr_elements'].slice();
-
-		if( !sourceNodes.length ) {
-			return this;
-		}
-
-		this.each((index, targetEl) => {
-			const isLastTarget = index === this.length - 1;
-
-			const nodesToInsert = [];
-			// Iterate over the stable snapshot, not a live collection
-			for( const sourceNode of sourceNodes ) {
-				// For the last target, move the original newContent elements
-				// For all other targets, use a deep clone
-				const node = isLastTarget
-					? sourceNode
-					: $._internal.cloneNode(sourceNode, true, true);
-				nodesToInsert.push(node);
-			}
-
+		return $._internal.domManip(this, newContent, function(target, nodes) {
 			// Proactively clean up the element being replaced to prevent memory leaks
-			$._internal.cleanupNodeTree(targetEl);
-
-			// Use the native DOM method to replace the target element
-			targetEl.replaceWith(...nodesToInsert);
+			$._internal.cleanupNodeTree(target);
+			target.replaceWith(...nodes);
 		});
-
-		return this;
 	});
 
 })();
@@ -3201,10 +3140,8 @@ const $ = (function() {
 			'id', 'value', 'textContent', 'innerHTML', 'checked', 'selected', 'disabled', 'title', 'href', 'src'
 		]);
 
-		for( const key in props ) {
-			if( !Object.hasOwn(props, key) ) continue;
-			const value = props[key];
-
+		// Optimize loop using Object.entries to iterate only own properties
+		for( const [key, value] of Object.entries(props) ) {
 			// Route properties to appropriate methods or set directly
 			if( typeof value === 'function' ) {
 				$el.on(key, value); // Events
@@ -3213,7 +3150,7 @@ const $ = (function() {
 				$el.each(function() { this.textContent = value; });
 			}
 			else if( key === 'html' ) {
-				$el.each(function() { this.innerHTML = value; });
+				$el.html(value);
 			}
 			else if( key === 'class' ) {
 				$el.addClass(String(value));
