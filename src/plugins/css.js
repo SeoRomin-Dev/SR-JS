@@ -68,6 +68,7 @@
 		this.each(function() {
 			// .css({ 'prop': 'value', ... })
 			if( typeof prop === 'object' ) {
+				// Optimize loop using Object.entries to iterate only own properties
 				for( const [key, val] of Object.entries(prop) ) {
 					setStyle(this, key, val);
 				}

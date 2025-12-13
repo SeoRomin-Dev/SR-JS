@@ -510,6 +510,56 @@
 		}
 	};
 
+	// --- DOM Manipulation Helpers ---
+
+	// Helper to sort unique elements in document order
+	$._internal.uniqueSort = ( elements ) => {
+		return Array.from(elements).sort((a, b) => {
+			if( a === b ) return 0;
+			// Use compareDocumentPosition for a robust, cross-browser sort
+			if( a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ) {
+				return -1; // a comes before b
+			}
+			return 1; // b comes before a
+		});
+	};
+
+	// Centralized helper for inserting content (append, prepend, after, before, replaceWith, etc.)
+	// Handles content processing, stable snapshots, and cloning logic for multiple targets
+	$._internal.domManip = ( collection, content, callback ) => {
+		// Do nothing if content is null/undefined or there are no elements to modify
+		if( content == null || !collection.length ) {
+			return collection;
+		}
+
+		// Create a stable snapshot of the source nodes before any DOM manipulation
+		const sourceNodes = $(content)['_sr_elements'].slice();
+
+		if( !sourceNodes.length ) {
+			return collection;
+		}
+
+		collection.each((index, targetEl) => {
+			const isLastTarget = index === collection.length - 1;
+
+			const nodesToInsert = [];
+			// Iterate over the stable snapshot, not a live collection
+			for( const sourceNode of sourceNodes ) {
+				// For the last target, move the original newContent elements
+				// For all other targets, use a deep clone
+				const node = isLastTarget
+					? sourceNode
+					: $._internal.cloneNode(sourceNode, true, true);
+				nodesToInsert.push(node);
+			}
+
+			// Pass the target and the prepared nodes to the specific insertion callback
+			callback.call(targetEl, targetEl, nodesToInsert);
+		});
+
+		return collection;
+	};
+
 	// --- Animation Helpers ---
 
 	// Animation queue management

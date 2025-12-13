@@ -36,15 +36,13 @@
 		if( typeof name === 'object' ) {
 			this.each(function() {
 				const element = this;
-				for( const key in name ) {
-					if( Object.hasOwn(name, key) ) {
-						const val = name[key];
-						if( val === null || val === undefined ) {
-							$._internal.removeAttribute(element, key);
-						} else {
-							// setAttribute expects a string value
-							element.setAttribute(key, String(val));
-						}
+				// Optimize loop using Object.entries to iterate only own properties
+				for( const [key, val] of Object.entries(name) ) {
+					if( val === null || val === undefined ) {
+						$._internal.removeAttribute(element, key);
+					} else {
+						// setAttribute expects a string value
+						element.setAttribute(key, String(val));
 					}
 				}
 			});
@@ -66,6 +64,7 @@
 						const oldAttr = element.getAttribute(name);
 						oldValForCallback = oldAttr === null ? undefined : oldAttr;
 					}
+
 					finalValue = value.call(element, index, oldValForCallback);
 				}
 

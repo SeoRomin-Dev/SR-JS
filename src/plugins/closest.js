@@ -53,6 +53,7 @@
 						closestElements.add(current);
 						break; // Found the closest for this element, stop traversing up
 					}
+
 					current = current.parentElement;
 				}
 			});
@@ -62,15 +63,8 @@
 			return $();
 		}
 
-		// Sort the final unique elements in document order for consistency
-		const sortedElements = Array.from(closestElements).sort((a, b) => {
-			if( a === b ) return 0;
-			// Use compareDocumentPosition for a robust, cross-browser sort
-			if( a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ) {
-				return -1; // a comes before b
-			}
-			return 1; // b comes before a
-		});
+		// Use the centralized sorting helper
+		const sortedElements = $._internal.uniqueSort(closestElements);
 
 		return $(sortedElements);
 	});

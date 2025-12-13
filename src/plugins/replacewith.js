@@ -6,40 +6,11 @@
 (function() {
 
 	$.extend('replaceWith', function( newContent ) {
-		// Do nothing if content is null/undefined or there are no elements to replace
-		if( newContent == null || !this.length ) {
-			return this;
-		}
-
-		// Create a stable snapshot of the source nodes before any DOM manipulation
-		const sourceNodes = $(newContent)['_sr_elements'].slice();
-
-		if( !sourceNodes.length ) {
-			return this;
-		}
-
-		this.each((index, targetEl) => {
-			const isLastTarget = index === this.length - 1;
-
-			const nodesToInsert = [];
-			// Iterate over the stable snapshot, not a live collection
-			for( const sourceNode of sourceNodes ) {
-				// For the last target, move the original newContent elements
-				// For all other targets, use a deep clone
-				const node = isLastTarget
-					? sourceNode
-					: $._internal.cloneNode(sourceNode, true, true);
-				nodesToInsert.push(node);
-			}
-
+		return $._internal.domManip(this, newContent, function(target, nodes) {
 			// Proactively clean up the element being replaced to prevent memory leaks
-			$._internal.cleanupNodeTree(targetEl);
-
-			// Use the native DOM method to replace the target element
-			targetEl.replaceWith(...nodesToInsert);
+			$._internal.cleanupNodeTree(target);
+			target.replaceWith(...nodes);
 		});
-
-		return this;
 	});
 
 })();

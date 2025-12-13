@@ -22,10 +22,8 @@
 			'id', 'value', 'textContent', 'innerHTML', 'checked', 'selected', 'disabled', 'title', 'href', 'src'
 		]);
 
-		for( const key in props ) {
-			if( !Object.hasOwn(props, key) ) continue;
-			const value = props[key];
-
+		// Optimize loop using Object.entries to iterate only own properties
+		for( const [key, value] of Object.entries(props) ) {
 			// Route properties to appropriate methods or set directly
 			if( typeof value === 'function' ) {
 				$el.on(key, value); // Events
@@ -34,7 +32,7 @@
 				$el.each(function() { this.textContent = value; });
 			}
 			else if( key === 'html' ) {
-				$el.each(function() { this.innerHTML = value; });
+				$el.html(value);
 			}
 			else if( key === 'class' ) {
 				$el.addClass(String(value));

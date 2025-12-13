@@ -37,6 +37,7 @@
 				elementData = {}; // Create cache if it doesn't exist
 				cache.set(element, elementData);
 			}
+
 			elementData[camelKey] = parsedValue; // Prime the cache
 
 			return parsedValue;
@@ -102,7 +103,7 @@
 
 			// .data({ key: val, ... })
 			if( typeof name === 'object' && name !== null ) {
-				// Use Object.entries for safe iteration over own properties
+				// Optimize loop using Object.entries to iterate only own properties
 				for( const [key, val] of Object.entries(name) ) {
 					setData(key, val);
 				}

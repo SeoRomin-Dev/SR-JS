@@ -22,12 +22,11 @@
 		if( typeof name === 'object' ) {
 			this.each(function() {
 				const element = this;
-				for( const key in name ) {
-					if( Object.hasOwn(name, key) ) {
-						const propName = key.trim();
-						if( propName ) {
-							element[propName] = name[key];
-						}
+				// Optimize loop using Object.entries to iterate only own properties
+				for( const [key, val] of Object.entries(name) ) {
+					const propName = key.trim();
+					if( propName ) {
+						element[propName] = val;
 					}
 				}
 			});
