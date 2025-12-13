@@ -10,7 +10,7 @@
      <div class="container">
           <a href="../index.html" class="back-link">← Back to Index</a>
           <h1>.html()</h1>
-          <p>Get the HTML contents of the first element in the set of matched elements or set the HTML contents of every matched element.</p>
+          <p>Get the HTML contents of the first element in the set of matched elements or set the contents of every matched element.</p>
 
           <h2>Examples</h2>
 
@@ -20,14 +20,23 @@ const content = $('.content').html();</code></pre>
           <h4>Result</h4>
           <pre><code>"&lt;span&gt;Hi&lt;/span&gt;"</code></pre>
 
-          <h3>2. Set HTML</h3>
+          <h3>2. Set HTML String</h3>
           <pre class="example"><code>$('.content').html('&lt;strong&gt;New Content&lt;/strong&gt;');</code></pre>
           <h4>Result</h4>
           <pre><code>&lt;div class="content"&gt;
      &lt;strong&gt;New Content&lt;/strong&gt;
 &lt;/div&gt;</code></pre>
 
-          <h3>3. Set with Function</h3>
+          <h3>3. Set with Element or Object</h3>
+          <p>You can pass a DOM element or SR object. The container will be emptied, and the element will be appended.</p>
+          <pre class="example"><code>const $iframe = $.t('&lt;iframe&gt;', { src: '/page' });
+$('.frame-container').html($iframe);</code></pre>
+          <h4>Result</h4>
+          <pre><code>&lt;div class="frame-container"&gt;
+     &lt;iframe src="/page"&gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+
+          <h3>4. Set with Function</h3>
           <pre class="example"><code>$('div').html((index) => `&lt;span&gt;Item ${index}&lt;/span&gt;`);</code></pre>
           <h4>Result</h4>
           <pre><code>&lt;div&gt;&lt;span&gt;Item 0&lt;/span&gt;&lt;/div&gt;
@@ -45,8 +54,8 @@ const content = $('.content').html();</code></pre>
                <tbody>
                     <tr>
                          <td><strong>content</strong></td>
-                         <td>string | function</td>
-                         <td>The HTML string to set, or a function that returns an HTML string. Function receives <code>(index, currentHtml)</code>.</td>
+                         <td>string | element | SR | function</td>
+                         <td>The content to set. Can be an HTML string, a DOM element, an SR object, or a function returning any of these. Function receives <code>(index, currentHtml)</code>.</td>
                     </tr>
                </tbody>
           </table>
@@ -56,6 +65,6 @@ const content = $('.content').html();</code></pre>
                &copy; by SeoRomin. All rights reserved.
           </div>
      </div>
-     
+
 </body>
 </html>
